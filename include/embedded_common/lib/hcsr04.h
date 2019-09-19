@@ -3,8 +3,8 @@
  * created 3 Apr 2014 by Erick Simões (github: @ErickSimoes | twitter: @AloErickSimoes)
  */
 
-#ifndef hcsr04_h
-#define hcsr04_h
+#ifndef OMNI_HCSR04_H
+#define OMNI_HCSR04_H
 
 /*
  * Values of divisors
@@ -15,7 +15,6 @@ namespace omni
 {
 class hcsr04 {
   public:
-    hcsr04(uint8_t sigPin) : hcsr04(sigPin, sigPin) {};
     hcsr04(uint8_t trigPin, uint8_t echoPin, unsigned long timeOut = 20000UL);
     unsigned int read(uint8_t und = CM);
     void setTimeout(unsigned long timeOut) {timeout = timeOut;}
