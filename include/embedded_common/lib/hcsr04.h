@@ -1,37 +1,23 @@
 /*
- * Ultrasonic.h
- *
- * Library for Ultrasonic Ranging Module in a minimalist way
- *
- * created 3 Apr 2014
- * by Erick Simões (github: @ErickSimoes | twitter: @AloErickSimoes)
- * modified 23 Jan 2017
- * by Erick Simões (github: @ErickSimoes | twitter: @AloErickSimoes)
- * modified 04 Mar 2017
- * by Erick Simões (github: @ErickSimoes | twitter: @AloErickSimoes)
- * modified 15 May 2017
- * by Eliot Lim    (github: @eliotlim)
- * modified 10 Jun 2018
- * by Erick Simões (github: @ErickSimoes | twitter: @AloErickSimoes)
- *
- * Released into the MIT License.
+ * A port of Library for hcsr04 Ranging Module in a minimalist way
+ * created 3 Apr 2014 by Erick Simões (github: @ErickSimoes | twitter: @AloErickSimoes)
  */
 
-#ifndef Ultrasonic_h
-#define Ultrasonic_h
+#ifndef hcsr04_h
+#define hcsr04_h
 
 /*
  * Values of divisors
  */
 #define CM 28
 #define INC 71
-
-class Ultrasonic {
+namespace omni
+{
+class hcsr04 {
   public:
-    Ultrasonic(uint8_t sigPin) : Ultrasonic(sigPin, sigPin) {};
-    Ultrasonic(uint8_t trigPin, uint8_t echoPin, unsigned long timeOut = 20000UL);
+    hcsr04(uint8_t sigPin) : hcsr04(sigPin, sigPin) {};
+    hcsr04(uint8_t trigPin, uint8_t echoPin, unsigned long timeOut = 20000UL);
     unsigned int read(uint8_t und = CM);
-    unsigned int distanceRead(uint8_t und = CM) __attribute__ ((deprecated ("This method is deprecated, use read() instead.")));
     void setTimeout(unsigned long timeOut) {timeout = timeOut;}
 
   private:
@@ -42,5 +28,5 @@ class Ultrasonic {
     unsigned long timeout;
     unsigned int timing();
 };
-
-#endif // Ultrasonic_h
+}
+#endif // hcsr04_h
