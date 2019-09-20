@@ -6,6 +6,10 @@
 #ifndef OMNI_HCSR04_H
 #define OMNI_HCSR04_H
 
+#include "ObjectConfig.h"
+#include "DigitalInputPin.h"
+#include "DigitalOutputPin.h"
+
 /*
  * Values of divisors
  */
@@ -14,18 +18,20 @@
 namespace omni
 {
 class hcsr04 {
-  public:
-    hcsr04(uint8_t trigPin, uint8_t echoPin, unsigned long timeOut = 20000UL);
-    unsigned int read(uint8_t und = CM);
-    void setTimeout(unsigned long timeOut) {timeout = timeOut;}
 
   private:
     uint8_t trig;
     uint8_t echo;
-    boolean threePins = false;
     unsigned long previousMicros;
     unsigned long timeout;
     unsigned int timing();
+
+  public:
+    hcsr04(uint8_t trigPin, uint8_t echoPin, unsigned long timeOut = 20000UL);
+    unsigned int read(uint8_t und = INC);
+    void setTimeout(unsigned long timeOut) {timeout = timeOut;}
+
+
 };
 }
 #endif // hcsr04_h
