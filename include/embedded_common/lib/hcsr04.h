@@ -28,7 +28,7 @@ class hcsr04 {
 
   public:
     hcsr04(uint8_t trigPin, uint8_t echoPin, unsigned long timeOut = 20000UL);
-    unsigned int read(uint8_t und = INC);
+    unsigned int read(uint8_t und = CM);
     void setTimeout(unsigned long timeOut) {timeout = timeOut;}
 
 
