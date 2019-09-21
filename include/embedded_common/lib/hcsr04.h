@@ -15,8 +15,8 @@
  */
 #define CM 28
 #define INC 71
-namespace omni
-{
+//namespace omni
+//{
 class hcsr04 {
 
   private:
@@ -33,5 +33,5 @@ class hcsr04 {
 
 
 };
-}
+//}
 #endif // hcsr04_h

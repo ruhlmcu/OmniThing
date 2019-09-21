@@ -17,8 +17,8 @@
 #include "frozen.h"
 #include <string.h>
 
-namespace omni
-{
+//namespace omni
+//{
 
 hcsr04::hcsr04(uint8_t trigPin, uint8_t echoPin, unsigned long timeOut) {
   trig = trigPin;
@@ -52,6 +52,4 @@ unsigned int hcsr04::timing() {
 unsigned int hcsr04::read(uint8_t und) {
   return timing() / und / 2;  //distance by divisor
 }
-
-
-}
+//}
