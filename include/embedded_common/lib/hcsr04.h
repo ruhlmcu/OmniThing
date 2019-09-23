@@ -7,8 +7,8 @@
 #define OMNI_HCSR04_H
 
 #include "ObjectConfig.h"
-#include "DigitalInputPin.h"
-#include "DigitalOutputPin.h"
+//#include "DigitalInputPin.h"
+//#include "DigitalOutputPin.h"
 
 /*
  * Values of divisors
@@ -17,8 +17,8 @@
 #define INC 71
 //namespace omni
 //{
-class hcsr04 {
-
+class hcsr04 : public InputUInt, public InputFloat
+{
   private:
     uint8_t trig;
     uint8_t echo;
