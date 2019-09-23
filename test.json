@@ -1,0 +1,25 @@
+}"Devices": [
+    {
+        "type": "Switch",
+        "name": "testSensor",
+        "triggers": [
+            {"interval": 12000, "command": "poll"}
+        ],
+        "output": {
+            "type":     "DigitalOutputPinArduino",
+            "pin":      14,
+            "initial":  true,
+            "invert":   false
+         },
+         "input": {
+             "type":         "AnalogInputPinArduino",
+             "pin":          17,
+             "minVoltage":   0,
+             "maxVoltage":   3.3
+         },
+        "constantPoll": true,
+        "invert":   false,
+        "initial":  false
+    }
+]
+}
