@@ -17,8 +17,8 @@
 #include "frozen.h"
 #include <string.h>
 
-//namespace omni
-//{
+namespace omni
+{
 
 DistanceSensor::DistanceSensor(uint8_t trigPin, uint8_t echoPin, unsigned long timeOut) {
   trig = trigPin;
@@ -52,4 +52,4 @@ unsigned int DistanceSensor::timing() {
 unsigned int DistanceSensor::read(uint8_t und) {
   return timing() / und / 2;  //distance by divisor
 }
-//}
+}
