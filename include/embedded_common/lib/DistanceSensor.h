@@ -3,8 +3,8 @@
  * created 3 Apr 2014 by Erick Simões (github: @ErickSimoes | twitter: @AloErickSimoes)
  */
 
-#ifndef OMNI_HCSR04_H
-#define OMNI_HCSR04_H
+#ifndef OMNI_DISTANCESENSOR_H
+#define OMNI_DISTANCESENSOR_H
 
 #include "ObjectConfig.h"
 //#include "DigitalInputPin.h"
@@ -17,7 +17,7 @@
 #define INC 71
 //namespace omni
 //{
-class hcsr04 : public InputUInt, public InputFloat
+class DistanceSensor : public InputUInt, public InputFloat
 {
   private:
     uint8_t trig;
@@ -27,7 +27,7 @@ class hcsr04 : public InputUInt, public InputFloat
     unsigned int timing();
 
   public:
-    hcsr04(uint8_t trigPin, uint8_t echoPin, unsigned long timeOut = 20000UL);
+    DistanceSensor(uint8_t trigPin, uint8_t echoPin, unsigned long timeOut = 20000UL);
     unsigned int read(uint8_t und = CM);
     void setTimeout(unsigned long timeOut) {timeout = timeOut;}
 
