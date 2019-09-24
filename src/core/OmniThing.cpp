@@ -845,7 +845,7 @@ namespace omni
                 }
                 if(!found)
                 {
-                    LOG << F("ERROR: No config found for type: ") << buffer << Logger::endl;
+                    LOG << F("ERROR: No config found for type: 1") << buffer << Logger::endl;
                     return false;
                 }
 
@@ -891,7 +891,7 @@ namespace omni
                 }
                 if(!found)
                 {
-                    LOG << F("ERROR: No config found for type: ") << buffer << Logger::endl;
+                    LOG << F("ERROR: No config found for type:  2") << buffer << Logger::endl;
                     return false;
                 }
 
@@ -941,7 +941,7 @@ namespace omni
             }
             if(!found)
             {
-                LOG << F("ERROR: No config found for type: ") << buffer << Logger::endl;
+                LOG << F("ERROR: No config found for type: 3") << buffer << Logger::endl;
                 return false;
             }
         }
@@ -985,7 +985,7 @@ namespace omni
             }
             if(!found)
             {
-                LOG << F("ERROR: No config found for type: ") << buffer << Logger::endl;
+                LOG << F("ERROR: No config found for type: 4") << buffer << Logger::endl;
                 return false;
             }
         }
