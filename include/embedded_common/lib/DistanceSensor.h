@@ -6,6 +6,8 @@
 #ifndef OMNI_DISTANCESENSOR_H
 #define OMNI_DISTANCESENSOR_H
 
+
+#include "CompositePeripheral.h"
 #include "ObjectConfig.h"
 #include "InputUInt.h"
 #include "InputFloat.h"
