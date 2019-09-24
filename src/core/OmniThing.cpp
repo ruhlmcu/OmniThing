@@ -35,6 +35,7 @@ namespace omni
         LOG << F("\nComposite Peripheral Configurations:\n");
         for(unsigned int i = 0; i < m_CompositePeriphConfigs.getCount(); ++i)
         {
+            LOG << F("\t") << i << F("\n");
             LOG << F("\t") << m_CompositePeriphConfigs[i]->getType() << F("\n");
         }
 
