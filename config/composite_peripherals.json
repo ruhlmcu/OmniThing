@@ -40,7 +40,7 @@
         "type": "DistanceSensor",
         "parameters": [
             {
-                "name": "pin",
+                "name": "triggerPin",
                 "type": "InputBool",
                 "required": true,
                 "default": true,
@@ -61,7 +61,7 @@
                 "description": "Whether or not to invert output"
             },
             {
-                "name": "pin",
+                "name": "echoPin",
                 "type": "uint",
                 "required": true,
                 "description": "Which pin the HCSR-04 Echo pin is connected to"
