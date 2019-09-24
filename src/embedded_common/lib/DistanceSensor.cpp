@@ -50,6 +50,7 @@ unsigned int DistanceSensor::timing() {
  * To change the default, replace CM by INC.
  */
 unsigned int DistanceSensor::read(uint8_t und) {
+  LOG << F("Made it to here") << timing()/ und / 2 << F(")\n");
   return timing() / und / 2;  //distance by divisor
 }
 }
