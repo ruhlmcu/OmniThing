@@ -1,10 +1,26 @@
-}"Devices": [
+{
+  "NetworkReceiver": {
+      "type": "NetworkManagerEsp8266",
+      "port": 1337,
+      "ssid": null,
+      "password": null
+  },
+  "NetworkSender": {
+      "type": "NetworkManagerEsp8266",
+      "port": 39500,
+      "ip": "192.168.1.30",
+      "ssid": "ruhlman",
+      "password": "Toyota3879"
+  },
+"CompositePeriphs": [],
+"Devices": [
     {
-        "type": "Switch",
+      "triggers": [
+          {"interval": 12000, "command": "poll"}
+      ],
+        "subscriptions": [],
+        "type": "DistanceSensor",
         "name": "testSensor",
-        "triggers": [
-            {"interval": 12000, "command": "poll"}
-        ],
         "output": {
             "type":     "DigitalOutputPinArduino",
             "pin":      14,
@@ -17,9 +33,7 @@
              "minVoltage":   0,
              "maxVoltage":   3.3
          },
-        "constantPoll": true,
-        "invert":   false,
-        "initial":  false
+        "constantPoll": true
     }
 ]
 }

@@ -4,7 +4,7 @@
         "parameters": [
             {
                 "name": "pin",
-                "type": "uint",
+                "type": "InputBool",
                 "required": true,
                 "description": "Which pin the dht is connected to"
             },
@@ -34,6 +34,49 @@
         "supported_platforms": [
             "rpi",
             "arduino"
+        ]
+    },
+    {
+        "type": "DistanceSensor",
+        "parameters": [
+            {
+                "name": "pin",
+                "type": "InputBool",
+                "required": true,
+                "default": true,
+                "description": "Which pin the HCSR-04 Trigger pin is connected to"
+            },
+            {
+                "name": "pullup",
+                "type": "bool",
+                "required": true,
+                "default": false,
+                "description": "Whether to enable internal pullup on the Trigger pin"
+            },
+            {
+                "name": "invert",
+                "type": "bool",
+                "required": true,
+                "default": false,
+                "description": "Whether or not to invert output"
+            },
+            {
+                "name": "pin",
+                "type": "uint",
+                "required": true,
+                "description": "Which pin the HCSR-04 Echo pin is connected to"
+            }
+        ],
+        "bools": [
+          "trigger"
+        ],
+        "floats": [
+            "distance"
+        ],
+        "uints": [
+        ],
+        "supported_platforms": [
+            "ESP8266"
         ]
     }
 ]

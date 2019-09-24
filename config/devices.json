@@ -41,7 +41,7 @@
                 "type": "OutputVoid",
                 "required": true,
                 "description": "What the device actuates (i.e. a gpio toggler)"
-            }        
+            }
         ],
         "events": [
             "pushed"
