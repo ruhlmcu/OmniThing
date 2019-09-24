@@ -15,8 +15,8 @@
  */
 #define CM 28
 #define INC 71
-//namespace omni
-//{
+namespace omni
+{
 class DistanceSensor : public InputUInt, public InputFloat
 {
   private:
@@ -33,5 +33,5 @@ class DistanceSensor : public InputUInt, public InputFloat
 
 
 };
-//}
+}
 #endif // hcsr04_h
