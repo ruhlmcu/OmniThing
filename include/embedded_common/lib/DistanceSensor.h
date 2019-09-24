@@ -7,8 +7,8 @@
 #define OMNI_DISTANCESENSOR_H
 
 #include "ObjectConfig.h"
-//#include "DigitalInputPin.h"
-//#include "DigitalOutputPin.h"
+#include "InputUInt.h"
+#include "InputFloat.h"
 
 /*
  * Values of divisors
