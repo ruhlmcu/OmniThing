@@ -22,7 +22,7 @@
  *
  */
 metadata {
-	definition (name: "Child Distance Sensor", , namespace: "OmniThing", author: "Daniel Ogorchock") ) {
+	definition (name: "Child Distance Sensor", , namespace: "OmniThing", author: "Daniel Ogorchock")  {
 		capability "Sensor"
 
 		attribute "lastUpdated", "String"
