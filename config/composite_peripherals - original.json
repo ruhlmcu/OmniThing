@@ -1,0 +1,81 @@
+[
+    {
+        "type": "DhtReader",
+        "parameters": [
+            {
+                "name": "pin",
+                "type": "InputBool",
+                "required": true,
+                "description": "Which pin the dht is connected to"
+            },
+            {
+                "name": "pullup",
+                "type": "bool",
+                "required": false,
+                "default": false,
+                "description": "Whether to enable internal pullup on pin"
+            },
+            {
+                "name": "dht11",
+                "type": "bool",
+                "required": false,
+                "default": false,
+                "description": "If you are using a dht11, set this to true (any other dht = false)"
+            }
+        ],
+        "bools": [
+        ],
+        "floats": [
+            "temperature",
+            "humidity"
+        ],
+        "uints": [
+        ],
+        "supported_platforms": [
+            "rpi",
+            "arduino"
+        ]
+    },
+    {
+        "type": "DistanceSensor",
+        "parameters": [
+            {
+                "name": "triggerPin",
+                "type": "InputBool",
+                "required": true,
+                "default": true,
+                "description": "Which pin the HCSR-04 Trigger pin is connected to"
+            },
+            {
+                "name": "pullup",
+                "type": "bool",
+                "required": true,
+                "default": false,
+                "description": "Whether to enable internal pullup on the Trigger pin"
+            },
+            {
+                "name": "invert",
+                "type": "bool",
+                "required": true,
+                "default": false,
+                "description": "Whether or not to invert output"
+            },
+            {
+                "name": "echoPin",
+                "type": "uint",
+                "required": true,
+                "description": "Which pin the HCSR-04 Echo pin is connected to"
+            }
+        ],
+        "bools": [
+        ],
+        "floats": [
+            "distance"
+        ],
+        "uints": [
+        ],
+        "supported_platforms": [
+            "arduino"
+        ]
+    }
+]
