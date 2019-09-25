@@ -13,7 +13,7 @@
 #include "OmniThing.h"
 #include "Logger.h"
 #include "OmniUtil.h"
-#include <Arduino.h>
+//#include <Arduino.h>
 #include "frozen.h"
 #include <string.h>
 

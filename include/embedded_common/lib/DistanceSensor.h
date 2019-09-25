@@ -36,4 +36,4 @@ class DistanceSensor : public InputUInt, public InputFloat
 
 };
 }
-#endif // hcsr04_h
+#endif

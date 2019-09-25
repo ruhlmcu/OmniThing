@@ -810,6 +810,9 @@ namespace omni
         unsigned int len = strlen(json);
         char buffer[100];
         buffer[0] = 0;
+        LOG << F("json :\n") << json << Logger::endl;
+        LOG << F("len: \n") << len << Logger::endl;
+        LOG << F("buffer: \n") << buffer << Logger::endl;
 
         // scan for NetworkReceiver
         if(json_scanf(json, len, "{NetworkReceiver: %T}", &t) == 1)
@@ -922,6 +925,7 @@ namespace omni
                 auto conf = m_CompositePeriphConfigs[i];
 
                 LOG << F("\t") << i << F("\n");
+                LOG << F("\t") << conf << F("\n");
                 LOG << F("\t") << m_CompositePeriphConfigs.getCount() << F("\n");
                 LOG << F("\t") << conf->getType() << F("\n");
                 LOG << F("\t") << buffer << F("\n");
