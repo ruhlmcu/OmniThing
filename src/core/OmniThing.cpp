@@ -919,6 +919,7 @@ namespace omni
             for(unsigned int i = 0; i < m_CompositePeriphConfigs.getCount(); ++i)
             {
                 auto conf = m_CompositePeriphConfigs[i];
+                LOG << F("\t") << i << F("\n");
                 LOG << F("\t") << m_CompositePeriphConfigs[i]->getType() << F("\n");
                 LOG << F("\t") << buffer << F("\n");
                 LOG << F("\t") << m_CompositePeriphConfigs[i] << F("\n");
