@@ -905,6 +905,7 @@ namespace omni
         // scan for CompositePeripherals
         for(unsigned int i = 0; json_scanf_array_elem(json, len, ".CompositePeriphs", i, &t) > 0; ++i)
         {
+            LOG << F("\t") << &t << F("\n");
             if(json_scanf(t.ptr, t.len, "{type: %s}", buffer) <= 0)
             {
                 strncpy(buffer, t.ptr, t.len);
