@@ -31,7 +31,7 @@ R"RAWSTR({"CompositePeriphs":
         "triggerPin": 12,
         "type": "DistanceSensor",
         "name": "Garage Sensor 01",
-        "echoPin": 13, 
+        "echoPin": 13,
         "invert": true,
         "pullup": true
 
