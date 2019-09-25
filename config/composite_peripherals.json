@@ -68,7 +68,6 @@
             }
         ],
         "bools": [
-          "trigger"
         ],
         "floats": [
             "distance"
@@ -76,7 +75,7 @@
         "uints": [
         ],
         "supported_platforms": [
-            "ESP8266"
+            "arduino"
         ]
     }
 ]
