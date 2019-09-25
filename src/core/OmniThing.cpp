@@ -29,6 +29,7 @@ namespace omni
         LOG << F("Device Configurations:\n");
         for(unsigned int i = 0; i < m_DeviceConfigs.getCount(); ++i)
         {
+            LOG << F("\t") << i << F("\n");
             LOG << F("\t") << m_DeviceConfigs[i]->getType() << F("\n");
         }
 
@@ -845,7 +846,7 @@ namespace omni
                 }
                 if(!found)
                 {
-                    LOG << F("ERROR: No config found for type: 1") << buffer << Logger::endl;
+                    LOG << F("ERROR: No config found for type: ") << buffer << Logger::endl;
                     return false;
                 }
 
@@ -891,7 +892,7 @@ namespace omni
                 }
                 if(!found)
                 {
-                    LOG << F("ERROR: No config found for type:  2") << buffer << Logger::endl;
+                    LOG << F("ERROR: No config found for type: ") << buffer << Logger::endl;
                     return false;
                 }
 
@@ -905,7 +906,7 @@ namespace omni
         // scan for CompositePeripherals
         for(unsigned int i = 0; json_scanf_array_elem(json, len, ".CompositePeriphs", i, &t) > 0; ++i)
         {
-            LOG << F("\t") << &t << F("\n");
+            LOG << F("\t") << json << F("\n");
             if(json_scanf(t.ptr, t.len, "{type: %s}", buffer) <= 0)
             {
                 strncpy(buffer, t.ptr, t.len);
@@ -919,11 +920,11 @@ namespace omni
             for(unsigned int i = 0; i < m_CompositePeriphConfigs.getCount(); ++i)
             {
                 auto conf = m_CompositePeriphConfigs[i];
-                LOG << F("\t") << m_CompositePeriphConfigs[i].getCount() << F("\n");
+
                 LOG << F("\t") << i << F("\n");
-                LOG << F("\t") << m_CompositePeriphConfigs[i]->getType() << F("\n");
+                LOG << F("\t") << m_CompositePeriphConfigs.getCount() << F("\n");
+                LOG << F("\t") << conf->getType() << F("\n");
                 LOG << F("\t") << buffer << F("\n");
-                LOG << F("\t") << m_CompositePeriphConfigs[i] << F("\n");
 
                 if(!strcmp(buffer, conf->getType()))
                 {
@@ -948,7 +949,7 @@ namespace omni
             }
             if(!found)
             {
-                LOG << F("ERROR: No config found for type: 3") << buffer << Logger::endl;
+                LOG << F("ERROR: No config found for type: ") << buffer << Logger::endl;
                 return false;
             }
         }
