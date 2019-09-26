@@ -5,7 +5,6 @@
 #include "OmniThing.h"
 #include "Logger.h"
 #include "OmniUtil.h"
-
 #include "frozen.h"
 #include <Arduino.h>
 #include <string.h>
