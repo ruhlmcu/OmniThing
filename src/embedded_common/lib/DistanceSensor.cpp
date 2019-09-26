@@ -7,8 +7,8 @@
 #include "OmniUtil.h"
 
 #include "frozen.h"
-//#include <Arduino.h>
-//#include <string.h>
+#include <Arduino.h>
+#include <string.h>
 
 namespace omni
 {
