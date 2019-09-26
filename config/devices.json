@@ -265,5 +265,32 @@
         "supported_platforms": [
             "all"
         ]
+    },
+    {
+        "type": "distanceSensor",
+        "parameters": [
+            {
+                "name": "triggerPin",
+                "type": "DigitalOutputPin",
+                "required": true,
+                "description": "GPIO for the HSRC04 Trigger Pin"
+            },
+            {
+                "name": "echoPin",
+                "type": "DigitalInputPin",
+                "required": false,
+                "description": "GPIO for the HSRC04 Echo Pin"
+            },
+
+        ],
+        "events": [
+            "changed"
+        ],
+        "commands": [
+            "poll"
+        ],
+        "supported_platforms": [
+            "all"
+        ]
     }
 ]
