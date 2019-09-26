@@ -26,15 +26,16 @@ R"RAWSTR({"NetworkSender":
 
 const char CompositePeriphs[] PROGMEM =
 R"RAWSTR({"CompositePeriphs":
+[]})RAWSTR";
+
+const char Device_0[] PROGMEM =
+R"RAWSTR({"Devices":
 [
     {
         "triggerPin": 12,
-        "type": "DistanceSensor",
         "name": "Garage Sensor 01",
-        "echoPin": 13,
-        "invert": true,
-        "pullup": true
-
+        "echoPin": 13, 
+        "type": "distanceSensor"
     }
 ]})RAWSTR";
 
@@ -43,12 +44,13 @@ R"RAWSTR({"CompositePeriphs":
 const char* const Config_Json_Strings[] PROGMEM = {
         NetworkReceiver,
         NetworkSender,
-        CompositePeriphs
+        CompositePeriphs,
+        Device_0
 };
 
-const unsigned int Num_Json_Strings = 3;
+const unsigned int Num_Json_Strings = 4;
 
-const unsigned int Max_Json_String_Length = 210;
+const unsigned int Max_Json_String_Length = 201;
 
 }
 
