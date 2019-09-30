@@ -14,9 +14,9 @@ namespace omni
         unsigned int len = strlen(json);
 
         json_token t;
-        unsigned long duration;
+        unsigned long Duration;
 
-        if(json_scanf(json, len, "{output: %T, duration: %lu}", &t, &duration) != 2)
+        if(json_scanf(json, len, "{output: %T, Duration: %lu}", &t, &Duration) != 2)
         {
             return nullptr;
         }
@@ -28,7 +28,7 @@ namespace omni
             return nullptr;
         }
 
-        return new TimedOutputBool(*output, duration);
+        return new TimedOutputBool(*output, Duration);
     }
 
     void TimedOutputBool::write(bool b)
@@ -52,9 +52,9 @@ namespace omni
 
 //protected
 //public
-    TimedOutputBool::TimedOutputBool(OutputBool& output, unsigned long duration):
+    TimedOutputBool::TimedOutputBool(OutputBool& output, unsigned long Duration):
         m_rOutput(output),
-        m_nDuration(duration),
+        m_nDuration(Duration),
         m_bValue(false),
         m_bTriggerPending(false)
     {
@@ -68,12 +68,12 @@ namespace omni
 
     void TimedOutputBool::writeBool(bool b)
     {
-        startTimedOutput();    
+        startTimedOutput();
     }
 
     void TimedOutputBool::writeVoid()
     {
-        startTimedOutput(); 
+        startTimedOutput();
     }
 
     void TimedOutputBool::trigger(void* arg)
@@ -86,18 +86,14 @@ namespace omni
     {
         return createFromJson(json);
     }
-    
+
     OutputVoid* TimedOutputBool::createVoidFromJson(const char* json)
     {
         return createFromJson(json);
     }
-    
-    
+
+
     const char* TimedOutputBool::Type = "TimedOutputBool";
     ObjectConfig<OutputBool> TimedOutputBool::OutputBoolConf(Type, createBoolFromJson);
     ObjectConfig<OutputVoid> TimedOutputBool::OutputVoidConf(Type, createVoidFromJson);
 }
-
-
-
-

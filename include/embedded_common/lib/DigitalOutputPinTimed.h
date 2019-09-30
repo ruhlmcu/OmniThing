@@ -20,7 +20,7 @@ namespace omni
             virtual void writePin(bool b) = 0;
 
         public:
-            DigitalOutputPinTimed(unsigned short pin, bool initialValue, bool invertLogic, unsigned long duration);
+            DigitalOutputPinTimed(unsigned short pin, bool initialValue, bool invertLogic, unsigned long Duration);
 
             virtual ~DigitalOutputPinTimed();
 
@@ -34,7 +34,7 @@ namespace omni
             void writeVoid() final;
             void writeBool(bool b) final;
 
-            static DigitalOutputPinTimed* create(unsigned short pin, bool initialValue, bool invertLogic, unsigned long duration);
+            static DigitalOutputPinTimed* create(unsigned short pin, bool initialValue, bool invertLogic, unsigned long Duration);
     };
 }
 
