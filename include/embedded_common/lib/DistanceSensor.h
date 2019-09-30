@@ -37,7 +37,7 @@ unsigned int timing();
     unsigned int read(uint8_t und = CM);
     void setTimeout(unsigned long timeOut) {timeout = timeOut;}
 
-    virtual ~triggerPin();
+    virtual ~distanceSensor();
 
     virtual bool configure();
 

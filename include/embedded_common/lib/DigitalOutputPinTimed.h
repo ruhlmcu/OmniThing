@@ -5,6 +5,7 @@
 //#include "OutputBool.h"
 #include "TimedOutputBool.h"
 
+
 namespace omni
 {
     class DigitalOutputPinTimed : public TimedOutputBool
