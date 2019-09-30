@@ -15,7 +15,7 @@
 
 namespace omni
 {
-  class triggerPin : public OutputVoid, public OutputBool
+  class distanceSensor : public OutputVoid, public OutputBool
   {
 
   private:
@@ -30,10 +30,10 @@ unsigned long timeout;
 unsigned int timing();
 
   protected:
-      void writePin(bool b) = 0;
+      virtual void writePin(bool b) = 0;
 
   public:
-    triggerPin(uint8_t trigPin, uint8_t echoPin, unsigned long timeOut = 20000UL);
+    distanceSensor(uint8_t trigPin, uint8_t echoPin, unsigned long timeOut = 20000UL);
     unsigned int read(uint8_t und = CM);
     void setTimeout(unsigned long timeOut) {timeout = timeOut;}
 

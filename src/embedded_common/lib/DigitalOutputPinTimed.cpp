@@ -44,7 +44,7 @@ namespace omni
     #if defined(OMNI_PLAT_RPI)
         return new DigitalOutputPinRaspberryPi(pin, initialValue, invertLogic);
     #elif !defined(OMNI_NOT_ARDUINO)
-        return new DigitalOutputPinTimedArduino(pin, initialValue, invertLogic, , unsigned long duration);
+        return new DigitalOutputPinTimedArduino(pin, initialValue, invertLogic, unsigned long duration);
     #else
         LOG << F("ERROR: DigitalInputPinTimed not supported on this platform\n");
         return nullptr;

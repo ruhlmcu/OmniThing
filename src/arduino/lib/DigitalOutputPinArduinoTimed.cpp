@@ -14,7 +14,7 @@ namespace omni
         unsigned short pin;
         bool initial;
         bool invert;
-        unsigned short duration;
+        unsigned long duration;
 
         if(json_scanf(json, len, "{pin: %hu, initial: %B, invert: %B}", &pin, &initial, &invert) != 3)
         {
