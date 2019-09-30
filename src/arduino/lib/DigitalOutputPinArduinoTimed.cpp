@@ -31,7 +31,7 @@ namespace omni
     }
 
 //public
-    DigitalOutputPinArduinoTimed::DigitalOutputPinArduinoTimed(unsigned short pin, bool initialVal, bool invertLogic, unsigned short duration):
+    DigitalOutputPinArduinoTimed::DigitalOutputPinArduinoTimed(unsigned short pin, bool initialVal, bool invertLogic, unsigned long duration):
         DigitalOutputPinTimed(pin, initialVal, invertLogic, duration)
     {
         configure();
