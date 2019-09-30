@@ -14,7 +14,7 @@ namespace omni
             void writePin(bool b) final;
 
         public:
-            DigitalOutputPinArduinoTimed(unsigned short pin, bool initialVal, bool invertLogic);
+            DigitalOutputPinArduinoTimed(unsigned short pin, bool initialVal, bool invertLogic, unsigned short duration);
 
             virtual ~DigitalOutputPinArduinoTimed();
 
