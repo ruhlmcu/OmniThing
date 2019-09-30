@@ -32,11 +32,28 @@ const char Device_0[] PROGMEM =
 R"RAWSTR({"Devices":
 [
     {
-        "triggerPin": 12,
-        "name": "Garage Sensor 01",
-        "echoPin": 13, 
-        "type": "distanceSensor"
-    }
+      "name": "Garage Sensor 01",
+      "type": distanceSensor,
+      "triggers": [
+      {
+        "interval": 10000,
+        "command": "poll"
+      }
+      ],
+      "output": {
+          "duration": 10000,
+          "initial": true,
+          "invert": false,
+          "type": "DigitalOutputPinArduinoTimed",
+          "pin": 12
+      },
+      "input": {
+          "type":     "DigitalInputPinArduino",
+          "pin":      13,
+          "invert":   false,
+          "pullup":   true
+      }
+      "unit": "CM"
 ]})RAWSTR";
 
 

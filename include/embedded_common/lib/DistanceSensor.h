@@ -4,8 +4,8 @@
 #ifndef OMNI_DISTANCESENSOR_H
 #define OMNI_DISTANCESENSOR_H
 
-#include "DigitalInputPin.h"
-#include "DigitalOutputPin.h"
+#include "OutputVoid.h"
+#include "OutputBool.h"
 
 /*
  * Values of divisors
@@ -15,52 +15,54 @@
 
 namespace omni
 {
-  class distanceSensor : public DigitalOutputPin, public DigitalInputPin
+  class triggerPin : public OutputVoid, public OutputBool
   {
+
   private:
-//private: from DigitalxOutputPinArduino and DigitalxInputPinArduino
-    static distanceSensor* createFromJson(const char* json);
-    bool m_bPullup;
-    //private: from Ultrasonic Library Example
-    uint8_t trig;
-    uint8_t echo;
-    bool threePins = false;
-    unsigned long previousMicros;
-    unsigned long timeout;
-    unsigned int timing();
-//protected: from DigitalxOutputPinArduino and DigitalxInputPinArduino
+    unsigned short m_nPin;
+    bool m_bValue;
+    bool m_bInvertLogic;
+
   protected:
-    void writePin(bool b) final;
-    bool readPin() final;
+      void writePin(bool b) = 0;
+
   public:
-//public: from distanceSensor and DigitalxInputPinArduino
-    distanceSensor(unsigned short pin, bool initialVal, bool invertLogic);
+    distanceSensor(uint8_t trigPin, uint8_t echoPin, unsigned long timeOut = 20000UL);
+    unsigned int read(uint8_t und = CM);
+    void setTimeout(unsigned long timeOut) {timeout = timeOut;}
 
     virtual ~distanceSensor();
 
     virtual bool configure();
-
-    static OutputVoid* createVoidFromJson(const char* json);
-    static OutputBool* createBoolFromJson(const char* json);
 
     static const char* Type;
     static ObjectConfig<OutputVoid> OutputVoidConf;
     static ObjectConfig<OutputBool> OutputBoolConf;
-    distanceSensor(unsigned short pin, bool invertLogic, bool pullup);
+
+  };
+  class triggerPin : public OutputVoid, public OutputBool, public OutputFloat
+  {
+
+  private:
+      static triggerPin* createFromJson(const char* json);
+      static
+
+  protected:
+      void writePin(bool b) = 0;
+
+  public:
+    distanceSensor(uint8_t trigPin, uint8_t echoPin, unsigned long timeOut = 20000UL);
+    unsigned int read(uint8_t und = CM);
+    void setTimeout(unsigned long timeOut) {timeout = timeOut;}
 
     virtual ~distanceSensor();
 
     virtual bool configure();
 
-    static InputBool* createFromJson(const char* json);
-
     static const char* Type;
-    static ObjectConfig<InputBool> InputBoolConf;
-//public: from Ultrasonic Library Example
-    distanceSensor(uint8_t sigPin) : distanceSensor(sigPin, sigPin) {};
-    distanceSensor(uint8_t triggerPin, uint8_t echoPin, unsigned long timeOut = 20000UL);
-    unsigned int read(uint8_t und = CM);
-    void setTimeout(unsigned long timeOut) {timeout = timeOut;}
+    static ObjectConfig<OutputVoid> OutputVoidConf;
+    static ObjectConfig<OutputBool> OutputBoolConf;
+
   };
 }
 #endif
