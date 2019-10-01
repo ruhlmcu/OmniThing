@@ -16,7 +16,7 @@ namespace omni
         bool invert;
         unsigned long duration;
 
-        if(json_scanf(json, len, "{pin: %hu, initial: %B, invert: %B}", &pin, &initial, &invert) != 3)
+        if(json_scanf(json, len, "{pin: %hu, initial: %B, invert: %B, duration: %B}", &pin, &initial, &invert, &duration) != 3)
         {
             return nullptr;
         }
@@ -31,13 +31,14 @@ namespace omni
     }
 
 //public
-    DigitalOutputPinArduinoTimed::DigitalOutputPinArduinoTimed(unsigned short pin, bool initialVal, bool invertLogic, unsigned long duration):
-//        DigitalOutputPinTimed(pin, initialVal, invertLogic, duration)
+    DigitalOutputPinArduinoTimed::DigitalOutputPinArduinoTimed(unsigned short pin, bool initialVal, bool invertLogic, unsigned long duration) :
+        DigitalOutputPinTimed(pin, initialVal, invertLogic, duration)
+/*
 m_nPin(pin),
-m_bValue(initialValue),
+m_bValue(initialVal),
 m_bInvertLogic(invertLogic),
 m_nDuration(duration)
-
+*/
     {
         configure();
         writeBool(initialVal);

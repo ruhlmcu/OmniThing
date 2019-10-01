@@ -9,7 +9,12 @@ namespace omni
     {
         private:
             static DigitalOutputPinArduinoTimed* createFromJson(const char* json);
-
+            /*temp fix may be wrong
+            unsigned short m_nPin;
+            bool m_bValue;
+            bool m_bInvertLogic;
+            unsigned long m_nDuration;
+            temp fix may be wrong */
         protected:
             void writePin(bool b) final;
 
