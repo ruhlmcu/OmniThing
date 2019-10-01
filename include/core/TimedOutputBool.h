@@ -20,8 +20,9 @@ namespace omni
             void startTimedOutput();
 
         protected:
+
         public:
-            TimedOutputBool(OutputBool& output, unsigned long Duration);
+            TimedOutputBool(OutputBool& output, unsigned long duration);
 
             virtual ~TimedOutputBool();
 

@@ -14,9 +14,9 @@ namespace omni
         unsigned int len = strlen(json);
 
         json_token t;
-        unsigned long Duration;
+        unsigned long duration;
 
-        if(json_scanf(json, len, "{output: %T, Duration: %lu}", &t, &Duration) != 2)
+        if(json_scanf(json, len, "{output: %T, duration: %lu}", &t, &duration) != 2)
         {
             return nullptr;
         }
@@ -28,7 +28,7 @@ namespace omni
             return nullptr;
         }
 
-        return new TimedOutputBool(*output, Duration);
+        return new TimedOutputBool(*output, duration);
     }
 
     void TimedOutputBool::write(bool b)
@@ -52,9 +52,9 @@ namespace omni
 
 //protected
 //public
-    TimedOutputBool::TimedOutputBool(OutputBool& output, unsigned long Duration):
+    TimedOutputBool::TimedOutputBool(OutputBool& output, unsigned long duration):
         m_rOutput(output),
-        m_nDuration(Duration),
+        m_nDuration(duration),
         m_bValue(false),
         m_bTriggerPending(false)
     {

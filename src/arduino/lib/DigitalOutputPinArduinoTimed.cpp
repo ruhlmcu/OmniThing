@@ -32,7 +32,12 @@ namespace omni
 
 //public
     DigitalOutputPinArduinoTimed::DigitalOutputPinArduinoTimed(unsigned short pin, bool initialVal, bool invertLogic, unsigned long duration):
-        DigitalOutputPinTimed(pin, initialVal, invertLogic, duration)
+//        DigitalOutputPinTimed(pin, initialVal, invertLogic, duration)
+m_nPin(pin),
+m_bValue(initialValue),
+m_bInvertLogic(invertLogic),
+m_nDuration(duration)
+
     {
         configure();
         writeBool(initialVal);
