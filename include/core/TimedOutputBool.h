@@ -22,7 +22,8 @@ namespace omni
         protected:
         public:
             TimedOutputBool(OutputBool& output, unsigned long Duration);
-            ~TimedOutputBool();
+
+            virtual ~TimedOutputBool();
 
             virtual void writeBool(bool b);
             virtual void writeVoid();

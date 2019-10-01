@@ -12,7 +12,7 @@ namespace omni
 
 
 //public
-    DigitalOutputPinTimed::DigitalOutputPinTimed(unsigned short pin, bool initialValue, bool invertLogic, unsigned long Duration):
+    DigitalOutputPinTimed::DigitalOutputPinTimed(unsigned short pin, bool initialValue, bool invertLogic, unsigned long Duration) :
         m_nPin(pin),
         m_bValue(initialValue),
         m_bInvertLogic(invertLogic),
@@ -44,7 +44,7 @@ namespace omni
     #if defined(OMNI_PLAT_RPI)
         return new DigitalOutputPinRaspberryPi(pin, initialValue, invertLogic);
     #elif !defined(OMNI_NOT_ARDUINO)
-        return new DigitalOutputPinTimedArduino(pin, initialValue, invertLogic, Duration);
+        return new DigitalOutputPinArduinoTimed(pin, initialValue, invertLogic, Duration);
     #else
         LOG << F("ERROR: DigitalInputPinTimed not supported on this platform\n");
         return nullptr;
