@@ -1119,6 +1119,11 @@ int json_scanf(const char *str, int len, const char *fmt, ...) {
   va_start(ap, fmt);
   result = json_vscanf(str, len, fmt, ap);
   va_end(ap);
+  LOG << "json_vscanf str=" << str << "\n";
+    LOG << "json_vscanf len=" << len << "\n";
+      LOG << "json_vscanf fmt=" << fmt << "\n";
+        LOG << "json_vscanf ap=" << ap << "\n";
+          LOG << "json_vscanf result=" << result << "\n";
   return result;
 }
 
