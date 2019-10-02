@@ -41,15 +41,15 @@ R"RAWSTR({"Devices":
       }
       ],
       "output": {
-                  "duration": 10000,
+                  "type": "TimedOutputBool",
                   "output": {
                       "invert": true,
                       "initial": true,
                       "type": "DigitalOutputPinArduino",
                       "pin": 12
                   },
-                  "type": "TimedOutputBool"
-              },
+                  "duration": 10000
+                },
       "input": {
           "type":     "DigitalInputPinArduino",
           "pin":      13,

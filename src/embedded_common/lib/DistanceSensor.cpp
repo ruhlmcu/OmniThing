@@ -12,16 +12,18 @@ namespace omni
 
 
 //public from Ultrasonic Library Example
-    distanceSensor::distanceSensor(uint8_t trigPin, uint8_t echoPin, unsigned long timeOut) {
-      trig = trigPin;
-      echo = echoPin;
+    distanceSensor::distanceSensor(uint8_t trigPin, uint8_t echoPin, unsigned long timeOut) :
+    trig(trigPin),
+    echo(echoPin),
+    timeout(timeOut)
+      {
+      LOG << F("Made it here #1\n");
       threePins = trig == echo ? true : false;
       pinMode(trig, OUTPUT);
       pinMode(echo, INPUT);
-      timeout = timeOut;
-    }
-
+      }
     unsigned int distanceSensor::timing() {
+      LOG << F("Made it here #2\n");
       if (threePins)
         pinMode(trig, OUTPUT);
 
@@ -48,6 +50,7 @@ namespace omni
      * To change the default, replace CM by INC.
      */
     unsigned int distanceSensor::read(uint8_t und) {
+      LOG << F("Made it here #3\n");
       return timing() / und / 2;  //distance by divisor
     }
 }

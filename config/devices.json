@@ -269,22 +269,39 @@
     {
         "type": "distanceSensor",
         "parameters": [
-            {
-                "name": "triggerPin",
-                "type": "DigitalOutputPin",
-                "required": true,
-                "description": "GPIO for the HSRC04 Trigger Pin"
-            },
-            {
-                "name": "echoPin",
-                "type": "DigitalInputPin",
-                "required": false,
-                "description": "GPIO for the HSRC04 Echo Pin"
-            },
+          {
+              "name": "output",
+              "type": "TimedOutputBool",
+              "required": true,
+              "description": "What the device sets to true/false (i.e. digital output pin)"
+          },
+          {
+              "name": "input",
+              "type": "InputBool",
+              "required": true,
+              "invert": false,
+              "description": "What the device sets to the roundtrip time in milliseconds from trigger to echo recieved (i.e. digital input pin)"
+          },
+          {
+              "name": "unit",
+              "type": "string",
+              "required": true,
+              "description": "CM for centimeters and IN for inches"
+          {
+              "name": "invert",
+              "type": "bool",
+              "required": true,
+              "description": "Whether or not to invert output"
+          },
+          {
+              "name": "initial",
+              "type": "bool",
+              "required": true,
+              "description": "Initial value to set the switch to at startup"
+          }
 
         ],
         "events": [
-            "changed"
         ],
         "commands": [
             "poll"

@@ -23,11 +23,11 @@ namespace omni
     bool m_bValue;
     bool m_bInvertLogic;
     uint8_t trig;
-uint8_t echo;
-boolean threePins = false;
-unsigned long previousMicros;
-unsigned long timeout;
-unsigned int timing();
+    uint8_t echo;
+    boolean threePins = false;
+    unsigned long previousMicros;
+    unsigned long timeout;
+    unsigned int timing();
 
   protected:
       virtual void writePin(bool b) = 0;
