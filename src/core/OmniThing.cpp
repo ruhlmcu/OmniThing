@@ -804,16 +804,15 @@ namespace omni
     //
     bool OmniThing::loadJsonConfig(char* json)
     {
-        LOG << F("Parsing Json Config:\n") << json << Logger::endl;
+        LOG << F("Parsing Json Config:\n");
 
         struct json_token t;
         unsigned int len = strlen(json);
         char buffer[100];
         buffer[0] = 0;
-        LOG << F("json :\n") << json << Logger::endl;
         LOG << F("len: \n") << len << Logger::endl;
         LOG << F("buffer: \n") << buffer << Logger::endl;
-
+        LOG << F("Starting to Scan fo NetworkReceiver\n");
         // scan for NetworkReceiver
         if(json_scanf(json, len, "{NetworkReceiver: %T}", &t) == 1)
         {
@@ -858,6 +857,7 @@ namespace omni
             {
                 LOG << "NetworkReceiver requires a specified type\n";
             }
+        LOG << F("Starting to Scan for NetworkSender\n");
         }
 
         // scan for NetworkSender
@@ -904,6 +904,7 @@ namespace omni
             {
                 LOG << "NetworkSender requires a specified type\n";
             }
+        LOG << F("Starting to Scan for CompositePeriphs\n");
         }
 
         // scan for CompositePeripherals
@@ -957,10 +958,11 @@ namespace omni
                 return false;
             }
         }
-
+        LOG << F("Starting to Scan for Devices\n");
         // scan for Devices
         for(unsigned int i = 0; json_scanf_array_elem(json, len, ".Devices", i, &t) > 0; ++i)
         {
+            LOG << F("Beginning of Devices Scan\n");
             if(json_scanf(t.ptr, t.len, "{type: %s}", buffer) <= 0)
             {
                 strncpy(buffer, t.ptr, t.len);

@@ -1047,7 +1047,7 @@ int json_vscanf(const char *s, int len, const char *fmt, va_list ap) {
   char *p = NULL;
   struct json_scanf_info info = {0, path, fmtbuf, NULL, NULL, 0};
 
-  //LOG << "json_vscanf s=" << s << " len=" << len << "\nfmt=" << fmt << Logger::endl;
+  LOG << "json_vscanf s=" << s << " len=" << len << "\nfmt=" << fmt << Logger::endl;
 
   while (fmt[i] != '\0') {
     //LOG << "i=" << i << " fmt[i]=" << fmt[i] << Logger::endl;
@@ -1122,7 +1122,7 @@ int json_scanf(const char *str, int len, const char *fmt, ...) {
   LOG << "json_vscanf str=" << str << "\n";
     LOG << "json_vscanf len=" << len << "\n";
       LOG << "json_vscanf fmt=" << fmt << "\n";
-        LOG << "json_vscanf ap=" << ap << "\n";
+//        LOG << "json_vscanf ap=" << ap << "\n";
           LOG << "json_vscanf result=" << result << "\n";
   return result;
 }
