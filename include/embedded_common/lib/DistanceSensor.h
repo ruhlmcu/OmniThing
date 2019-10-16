@@ -15,7 +15,7 @@
 
 namespace omni
 {
-  class distanceSensor : public OutputVoid, public OutputBool
+  class DistanceSensor : public OutputVoid, public OutputBool
   {
 
   private:
@@ -33,11 +33,11 @@ namespace omni
       virtual void writePin(bool b) = 0;
 
   public:
-    distanceSensor(uint8_t trigPin, uint8_t echoPin, unsigned long timeOut = 20000UL);
+    DistanceSensor(uint8_t trigPin, uint8_t echoPin, unsigned long timeOut = 20000UL);
     unsigned int read(uint8_t und = CM);
     void setTimeout(unsigned long timeOut) {timeout = timeOut;}
 
-    virtual ~distanceSensor();
+    virtual ~DistanceSensor();
 
     virtual bool configure();
 
@@ -57,11 +57,11 @@ namespace omni
       void writePin(bool b) = 0;
 
   public:
-    distanceSensor(uint8_t trigPin, uint8_t echoPin, unsigned long timeOut = 20000UL);
+    DistanceSensor(uint8_t trigPin, uint8_t echoPin, unsigned long timeOut = 20000UL);
     unsigned int read(uint8_t und = CM);
     void setTimeout(unsigned long timeOut) {timeout = timeOut;}
 
-    virtual ~distanceSensor();
+    virtual ~DistanceSensor();
 
     virtual bool configure();
 

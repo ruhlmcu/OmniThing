@@ -1,6 +1,6 @@
 // A port of Rob Tillaart's Arduino DHT library to OmniThing
 // https://github.com/RobTillaart/Arduino/tree/master/libraries/DHTstable
-#include "distanceSensor.h"
+#include "DistanceSensor.h"
 
 #include <Arduino.h>
 #include <string.h>
@@ -12,7 +12,7 @@ namespace omni
 
 
 //public from Ultrasonic Library Example
-    distanceSensor::distanceSensor(uint8_t trigPin, uint8_t echoPin, unsigned long timeOut) :
+    DistanceSensor::DistanceSensor(uint8_t trigPin, uint8_t echoPin, unsigned long timeOut) :
     trig(trigPin),
     echo(echoPin),
     timeout(timeOut)
@@ -22,7 +22,7 @@ namespace omni
       pinMode(trig, OUTPUT);
       pinMode(echo, INPUT);
       }
-    unsigned int distanceSensor::timing() {
+    unsigned int DistanceSensor::timing() {
       LOG << F("Made it here #2\n");
       if (threePins)
         pinMode(trig, OUTPUT);
@@ -49,7 +49,7 @@ namespace omni
      * sby default, it will return the distance in centimeters.
      * To change the default, replace CM by INC.
      */
-    unsigned int distanceSensor::read(uint8_t und) {
+    unsigned int DistanceSensor::read(uint8_t und) {
       LOG << F("Made it here #3\n");
       return timing() / und / 2;  //distance by divisor
     }

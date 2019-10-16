@@ -33,7 +33,7 @@ R"RAWSTR({"Devices":
 [
     {
       "name": "Garage Sensor 01",
-      "type": distanceSensor,
+      "type": DistanceSensor,
       "triggers": [
       {
         "interval": 10000,
