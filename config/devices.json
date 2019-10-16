@@ -287,6 +287,7 @@
               "type": "string",
               "required": true,
               "description": "CM for centimeters and IN for inches"
+          },
           {
               "name": "invert",
               "type": "bool",

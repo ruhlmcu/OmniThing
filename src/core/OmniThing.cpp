@@ -29,6 +29,7 @@ namespace omni
         LOG << F("Device Configurations:\n");
         for(unsigned int i = 0; i < m_DeviceConfigs.getCount(); ++i)
         {
+            LOG << F("\t") << m_DeviceConfigs.getCount() << F("\n");
             LOG << F("\t") << i << F("\n");
             LOG << F("\t") << m_DeviceConfigs[i]->getType() << F("\n");
         }
