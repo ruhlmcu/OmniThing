@@ -228,6 +228,7 @@ namespace omni
 
     void OmniThing::parseJson(const char* json)
     {
+        LOG << F("Parsing Json...\n");
         char name[OMNI_MAX_NAME_LENGTH + 1];
         name[0] = '\0';
         char cmd[24];
