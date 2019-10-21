@@ -965,7 +965,7 @@ namespace omni
 //                                          const char *s, int len, const char *path, int idx,struct json_token *token)
 LOG << F("Calling json_scanf_array_elem : ") << json << Logger::endl;
 LOG << F("Calling json_scanf_array_elem : ") << len << Logger::endl;
-LOG << F("Calling json_scanf_array_elem : ") << i << Logger::endl;
+//LOG << F("Calling json_scanf_array_elem : ") << i << Logger::endl;
 LOG << F("Calling json_scanf_array_elem : ") << &t << Logger::endl;
 
         for(unsigned int i = 0; json_scanf_array_elem(json, len, ".Devices", i, &t) > 0; ++i)

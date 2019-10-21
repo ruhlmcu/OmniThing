@@ -1,6 +1,7 @@
 // A port of Rob Tillaart's Arduino DHT library to OmniThing
 // https://github.com/RobTillaart/Arduino/tree/master/libraries/DHTstable
 #include "DistanceSensor.h"
+#include "OutputVoid.h"
 
 #include <Arduino.h>
 #include <string.h>
@@ -14,7 +15,7 @@ namespace omni
 //private
   void DistanceSensor::sendJsonPacket()
   {
-      char buffer[100] = "";
+      char buffer[256] = "";
       struct json_out out = JSON_OUT_BUF(buffer, sizeof(buffer));
 
       json_printf(&out, "{name: \"%s\", type: \"%s\", distance: \"%s\"}", getName(), getType(), read());
@@ -25,20 +26,21 @@ namespace omni
   }
 //protected
 //public from Ultrasonic Library Example
-    DistanceSensor::DistanceSensor(uint8_t trigPin, uint8_t echoPin, unsigned long timeOut, bool constantPoll):
-    Device(constantPoll),
-    trig(trigPin),
-    echo(echoPin),
-    timeout(timeOut)
-      {
-      LOG << F("Made it here #1\n");
-      threePins = trig == echo ? true : false;
-      pinMode(trig, OUTPUT);
-      pinMode(echo, INPUT);
-      }
+    DistanceSensor::DistanceSensor(OutputFloat& trigPin, uint8_t echoPin, unsigned long timeOut, bool constantPoll):
+      Device(constantPoll),
+      trig(trigPin),
+      echo(echoPin),
+      timeout(timeOut)
+        {
+        LOG << F("Made it here #1\n");
+        threePins = trig == echo ? true : false;
+        pinMode(trig, OUTPUT);
+        pinMode(echo, INPUT);
+        }
 
     DistanceSensor::~DistanceSensor()
     {
+
     }
 
     void DistanceSensor::recvJson(const char* cmd, const char* json)
@@ -56,6 +58,13 @@ namespace omni
         }
 
     }
+
+    void DistanceSensor::init()
+    {
+        m_bLastVal = read();
+        sendJsonPacket();
+    }
+
     void DistanceSensor::run()
     {
         bool val = read();
@@ -63,21 +72,11 @@ namespace omni
         {
             emit(Event_Changed);
 
-            if(val)
-                emit(Event_Active);
-            else
-                emit(Event_Inactive);
-
             sendJsonPacket();
         }
         m_bLastVal = val;
     }
 
-    void DistanceSensor::init()
-    {
-        m_bLastVal = read();
-        sendJsonPacket();
-    }
     unsigned int DistanceSensor::read(uint8_t und)
     {
       LOG << F("Made it here #3\n");
@@ -110,25 +109,27 @@ namespace omni
 
     Device* DistanceSensor::createFromJson(const char* json)
     {
-//        bool invert;
         bool constantPoll;
+        uint8_t echoPin;
+        unsigned long timeOut;
+
 
         unsigned int len = strlen(json);
         json_token t;
 
-        if(json_scanf(json, len, "{trigPin: %T, echoPin: %B, timeOut: %B}", &t, &constantPoll) != 3)
+        if(json_scanf(json, len, "{trigPin: %B, echoPin: %B, timeOut: %B, constantPoll: %B}", &t, &constantPoll) != 4)
         {
             return nullptr;
         }
 
-        auto input = OmniThing::getInstance().buildInputBool(t);
-        if(!input)
+        auto trigPin = OmniThing::getInstance().buildOutputVoid(t);
+        if(!trigPin)
         {
             LOG << F("ERROR: Failed to create input\n");
             return nullptr;
         }
 
-        auto d = new DistanceSensor(*input, *output, constantPoll);
+        auto d = new DistanceSensor(*trigPin, echoPin, timeOut, constantPoll);
         if(!d->parseMisc(json))
             return nullptr;
         return d;
@@ -138,8 +139,7 @@ namespace omni
 
 
     //events
-//    const char* DistanceSensor::Event_Active     = "active";
-//    const char* DistanceSensor::Event_Inactive   = "inactive";
+
     const char* DistanceSensor::Event_Changed    = "changed";
 
     const char* DistanceSensor::Type = "DistanceSensor";
