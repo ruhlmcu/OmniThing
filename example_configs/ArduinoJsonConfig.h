@@ -8,10 +8,10 @@ namespace omni
 const char NetworkReceiver[] PROGMEM =
 R"RAWSTR({"NetworkReceiver":
 {
-    "password": null,
+    "password": "Toyota3879",
     "type": "NetworkManagerEsp8266",
-    "port": 1337,
-    "ssid": null
+    "port": 8090,
+    "ssid": "ruhlman"
 }})RAWSTR";
 
 const char NetworkSender[] PROGMEM =
@@ -33,12 +33,14 @@ R"RAWSTR({"Devices":
 [
     {
       "name": "Garage Sensor 01",
-      "type": DistanceSensor,
+      "subscriptions": [],
+      "invert": false,
       "triggers": [
-      {
-        "interval": 10000,
-        "command": "poll"
-      }
+          {
+            "interval": 10000,
+            "command": "poll"
+            "offset": null
+          }
       ],
       "output": {
                   "type": "TimedOutputBool",
@@ -55,10 +57,12 @@ R"RAWSTR({"Devices":
           "pin":      13,
           "invert":   false,
           "pullup":   true
-      }
-      "unit": "CM"
+      },
+      "type": distanceSensor,
+      "unit": "CM",
+      "constantPoll": true
+    }
 ]})RAWSTR";
-
 
 
 const char* const Config_Json_Strings[] PROGMEM = {
@@ -70,7 +74,7 @@ const char* const Config_Json_Strings[] PROGMEM = {
 
 const unsigned int Num_Json_Strings = 4;
 
-const unsigned int Max_Json_String_Length = 201;
+const unsigned int Max_Json_String_Length = 817;
 
 }
 

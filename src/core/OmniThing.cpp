@@ -814,7 +814,7 @@ namespace omni
         buffer[0] = 0;
         LOG << F("len: \n") << len << Logger::endl;
         LOG << F("buffer: \n") << buffer << Logger::endl;
-        LOG << F("Starting to Scan fo NetworkReceiver\n");
+        LOG << F("Starting to Scan for NetworkReceiver 1\n");
         // scan for NetworkReceiver
         if(json_scanf(json, len, "{NetworkReceiver: %T}", &t) == 1)
         {
@@ -962,6 +962,12 @@ namespace omni
         }
         LOG << F("Starting to Scan for Devices\n");
         // scan for Devices
+//                                          const char *s, int len, const char *path, int idx,struct json_token *token)
+LOG << F("Calling json_scanf_array_elem : ") << json << Logger::endl;
+LOG << F("Calling json_scanf_array_elem : ") << len << Logger::endl;
+LOG << F("Calling json_scanf_array_elem : ") << i << Logger::endl;
+LOG << F("Calling json_scanf_array_elem : ") << &t << Logger::endl;
+
         for(unsigned int i = 0; json_scanf_array_elem(json, len, ".Devices", i, &t) > 0; ++i)
         {
             LOG << F("Beginning of Devices Scan\n");
