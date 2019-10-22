@@ -2,6 +2,7 @@
 // https://github.com/RobTillaart/Arduino/tree/master/libraries/DHTstable
 #include "DistanceSensor.h"
 #include "OutputVoid.h"
+#include "InputUInt.h"
 
 #include <Arduino.h>
 #include <string.h>
@@ -26,14 +27,13 @@ namespace omni
   }
 //protected
 //public from Ultrasonic Library Example
-    DistanceSensor::DistanceSensor(OutputFloat& trigPin, uint8_t echoPin, unsigned long timeOut, bool constantPoll):
-      Device(constantPoll),
+    DistanceSensor::DistanceSensor(InputUInt& trigPin, InputUInt& echoPin, unsigned long timeOut, bool constantPoll):
       trig(trigPin),
       echo(echoPin),
-      timeout(timeOut)
+      timeout(timeOut),
+      Device(constantPoll)
         {
         LOG << F("Made it here #1\n");
-        threePins = trig == echo ? true : false;
         pinMode(trig, OUTPUT);
         pinMode(echo, INPUT);
         }
@@ -77,7 +77,7 @@ namespace omni
         m_bLastVal = val;
     }
 
-    unsigned int DistanceSensor::read(uint8_t und)
+    unsigned int DistanceSensor::read(unsigned int und)
     {
       LOG << F("Made it here #3\n");
       return timing() / und / 2;  //distance by divisor
@@ -85,17 +85,12 @@ namespace omni
     unsigned int DistanceSensor::timing()
     {
       LOG << F("Made it here #2\n");
-      if (threePins)
-        pinMode(trig, OUTPUT);
 
       digitalWrite(trig, LOW);
       delayMicroseconds(2);
       digitalWrite(trig, HIGH);
       delayMicroseconds(10);
       digitalWrite(trig, LOW);
-
-      if (threePins)
-        pinMode(trig, INPUT);
 
       previousMicros = micros();
       while(!digitalRead(echo) && (micros() - previousMicros) <= timeout); // wait for the echo pin HIGH or timeout
@@ -110,7 +105,7 @@ namespace omni
     Device* DistanceSensor::createFromJson(const char* json)
     {
         bool constantPoll;
-        uint8_t echoPin;
+        unsigned int echoPin;
         unsigned long timeOut;
 
 
@@ -122,7 +117,7 @@ namespace omni
             return nullptr;
         }
 
-        auto trigPin = OmniThing::getInstance().buildOutputVoid(t);
+        auto trigPin = OmniThing::getInstance().buildInputUInt(t);
         if(!trigPin)
         {
             LOG << F("ERROR: Failed to create input\n");

@@ -1,23 +1,18 @@
 // A port of Rob Tillaart's Arduino DHT library to OmniThing
 // https://github.com/RobTillaart/Arduino/tree/master/libraries/DHTstable
-
 #ifndef OMNI_DISTANCESENSOR_H
 #define OMNI_DISTANCESENSOR_H
 
-//#include "OutputVoid.h"
-//#include "OutputBool.h"
-
 #include "Device.h"
 
-/*
+
  * Values of divisors
- */
+
 #define CM 28
 #define INC 71
 
 namespace omni
-{
-  class OutputVoid;
+
   class DistanceSensor :  public Device
   {
 
@@ -25,10 +20,9 @@ namespace omni
 
     uint8_t trig;
     uint8_t echo;
-    boolean threePins = false;
     unsigned long previousMicros;
     unsigned long timeout;
-    bool m_bLastVal;
+    unsigned int timing();
 
     void sendJsonPacket();
 
@@ -37,7 +31,7 @@ namespace omni
 //  virtual void writePin(bool b) = 0;
 
   public:
-    DistanceSensor(uint8_t trigPin, uint8_t echoPin, unsigned long timeOut = 20000UL, bool constantPoll = true);
+    DistanceSensor(InputUInt& trigPin, InputUInt& echoPin, unsigned long timeOut = 20000UL, bool constantPoll = true);
     virtual ~DistanceSensor();
 
     virtual void recvJson(const char* cmd, const char* json);
@@ -45,7 +39,7 @@ namespace omni
     virtual void init();
 
     virtual const char* getType() const {return Type;}
-    unsigned int read(uint8_t und = CM);
+    unsigned int read(unsigned int und = CM);
     unsigned int timing();
 
     static Device* createFromJson(const char* json);
@@ -64,7 +58,7 @@ namespace omni
 
     static const char* Event_Changed;
 
-    static ObjectConfig<OutputVoid> OutputVoidConf;
+    static ObjectConfig<InputUInt> InputUIntConf;
     static ObjectConfig<OutputBool> OutputBoolConf;
 
     static ObjectConfig<Device> DevConf;
