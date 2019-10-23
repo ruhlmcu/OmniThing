@@ -1,101 +1,78 @@
 // A port of Rob Tillaart's Arduino DHT library to OmniThing
 // https://github.com/RobTillaart/Arduino/tree/master/libraries/DHTstable
 #include "DistanceSensor.h"
-#include "OutputVoid.h"
-#include "InputUInt.h"
+#include "OmniThing.h"
+#include "Logger.h"
+#include "OmniUtil.h"
+
+#include "frozen.h"
 
 #include <Arduino.h>
 #include <string.h>
-#include "frozen.h"
-#include "OmniThing.h"
 
-#include "Logger.h"
+
 
 namespace omni
 {
 //private
-  void DistanceSensor::sendJsonPacket()
-  {
-      char buffer[256] = "";
-      struct json_out out = JSON_OUT_BUF(buffer, sizeof(buffer));
+void DistanceSensor::sendJsonPacket()
+{
+    char buffer[256] = "";
+    struct json_out out = JSON_OUT_BUF(buffer, sizeof(buffer));
 
-      json_printf(&out, "{name: \"%s\", type: \"%s\", distance: \"%s\"}", getName(), getType(), read());
+    json_printf(&out, "{name: \"%s\", type: \"%s\", distance: \"%s\"}", getName(), getType(), (read()?"inactive":"active"));
 
-      LOG << buffer << Logger::endl;
+    LOG << buffer << Logger::endl;
 
-      OmniThing::getInstance().sendJson(buffer);
-  }
+    OmniThing::getInstance().sendJson(buffer);
+}
 //protected
 //public from Ultrasonic Library Example
-    DistanceSensor::DistanceSensor(InputUInt& trigPin, InputUInt& echoPin, unsigned long timeOut, bool constantPoll):
-      trig(trigPin),
-      echo(echoPin),
+    DistanceSensor::DistanceSensor(unsigned short trigPin, unsigned short echoPin, unsigned long timeOut, bool constantPoll):
+      tPin(trigPin), //output pin
+      ePin(echoPin), //input pin
       timeout(timeOut),
-      Device(constantPoll)
-        {
-        LOG << F("Made it here #1\n");
-        pinMode(trig, OUTPUT);
-        pinMode(echo, INPUT);
-        }
+      Device(constantPoll),
+      echoPin(DigitalInputPin::create(ePin, false, internal_pullup)),
+      trigPin(DigitalOutputPin::create(tPin, true, false))
+
+    {
+
+    }
 
     DistanceSensor::~DistanceSensor()
     {
 
     }
-
     void DistanceSensor::recvJson(const char* cmd, const char* json)
     {
         if(!strcmp(cmd, Cmd_Poll))
         {
             LOG << F("Poll triggered for ") << getType() << F(" ") << getName() << Logger::endl;
             bool val = read();
-            if(val != m_bLastVal)
-            {
-                emit(Event_Changed);
-            }
-            m_bLastVal = val;
             sendJsonPacket();
         }
 
     }
-
-    void DistanceSensor::init()
-    {
-        m_bLastVal = read();
-        sendJsonPacket();
-    }
-
-    void DistanceSensor::run()
-    {
-        bool val = read();
-        if(val != m_bLastVal)
-        {
-            emit(Event_Changed);
-
-            sendJsonPacket();
-        }
-        m_bLastVal = val;
-    }
-
     unsigned int DistanceSensor::read(unsigned int und)
     {
-      LOG << F("Made it here #3\n");
+      LOG << F("DistanceSensor::read\n");
       return timing() / und / 2;  //distance by divisor
     }
     unsigned int DistanceSensor::timing()
     {
-      LOG << F("Made it here #2\n");
+      LOG << F("DistanceSensor::timing\n");
 
-      digitalWrite(trig, LOW);
+      digitalWrite(tPin, LOW);
       delayMicroseconds(2);
-      digitalWrite(trig, HIGH);
+      digitalWrite(tPin, HIGH);
       delayMicroseconds(10);
-      digitalWrite(trig, LOW);
+      digitalWrite(tPin, LOW);
 
       previousMicros = micros();
-      while(!digitalRead(echo) && (micros() - previousMicros) <= timeout); // wait for the echo pin HIGH or timeout
+      while(!digitalRead(ePin) && (micros() - previousMicros) <= timeout); // wait for the echo pin HIGH or timeout
       previousMicros = micros();
-      while(digitalRead(echo)  && (micros() - previousMicros) <= timeout); // wait for the echo pin LOW or timeout
+      while(digitalRead(ePin)  && (micros() - previousMicros) <= timeout); // wait for the echo pin LOW or timeout
 
       return micros() - previousMicros; // duration
 
@@ -104,38 +81,28 @@ namespace omni
 
     Device* DistanceSensor::createFromJson(const char* json)
     {
-        bool constantPoll;
-        unsigned int echoPin;
-        unsigned long timeOut;
-
+        LOG << F("DistanceSensor::createFromJson\n");
 
         unsigned int len = strlen(json);
-        json_token t;
+        unsigned short echoPin;
+        unsigned short trigPin;
+        unsigned long timeOut;
+        bool constantPoll;
+        bool pullup = false;
 
-        if(json_scanf(json, len, "{trigPin: %B, echoPin: %B, timeOut: %B, constantPoll: %B}", &t, &constantPoll) != 4)
+        if(json_scanf(json, len, "{trigPin: %B, echoPin: %B, timeOut: %B, constantPoll: %B}", &trigPin, &echoPin,&timeOut, &constantPoll) != 4)
         {
+            LOG << F("ERROR: inputs required\n");
             return nullptr;
         }
 
-        auto trigPin = OmniThing::getInstance().buildInputUInt(t);
-        if(!trigPin)
-        {
-            LOG << F("ERROR: Failed to create input\n");
-            return nullptr;
-        }
-
-        auto d = new DistanceSensor(*trigPin, echoPin, timeOut, constantPoll);
-        if(!d->parseMisc(json))
-            return nullptr;
-        return d;
+        return new DistanceSensor(trigPin, echoPin, timeOut, constantPoll);
     }
     //commands
     const char* DistanceSensor::Cmd_Poll = "poll";
 
-
-    //events
-
-    const char* DistanceSensor::Event_Changed    = "changed";
+    //statics
+    const char* DistanceSensor::Param_Distance = "distance";
 
     const char* DistanceSensor::Type = "DistanceSensor";
     ObjectConfig<Device> DistanceSensor::DevConf(Type, createFromJson);

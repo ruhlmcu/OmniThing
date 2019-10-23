@@ -814,7 +814,6 @@ namespace omni
         buffer[0] = 0;
         LOG << F("len: \n") << len << Logger::endl;
         LOG << F("buffer: \n") << buffer << Logger::endl;
-        LOG << F("Starting to Scan for NetworkReceiver 1\n");
         // scan for NetworkReceiver
         if(json_scanf(json, len, "{NetworkReceiver: %T}", &t) == 1)
         {
@@ -859,7 +858,6 @@ namespace omni
             {
                 LOG << "NetworkReceiver requires a specified type\n";
             }
-        LOG << F("Starting to Scan for NetworkSender\n");
         }
 
         // scan for NetworkSender
@@ -906,7 +904,6 @@ namespace omni
             {
                 LOG << "NetworkSender requires a specified type\n";
             }
-        LOG << F("Starting to Scan for CompositePeriphs\n");
         }
 
         // scan for CompositePeripherals
@@ -960,14 +957,6 @@ namespace omni
                 return false;
             }
         }
-        LOG << F("Starting to Scan for Devices\n");
-        // scan for Devices
-//                                          const char *s, int len, const char *path, int idx,struct json_token *token)
-LOG << F("Calling json_scanf_array_elem : ") << json << Logger::endl;
-LOG << F("Calling json_scanf_array_elem : ") << len << Logger::endl;
-//LOG << F("Calling json_scanf_array_elem : ") << i << Logger::endl;
-LOG << F("Calling json_scanf_array_elem : ") << &t << Logger::endl;
-
         for(unsigned int i = 0; json_scanf_array_elem(json, len, ".Devices", i, &t) > 0; ++i)
         {
             LOG << F("Beginning of Devices Scan\n");
@@ -977,6 +966,9 @@ LOG << F("Calling json_scanf_array_elem : ") << &t << Logger::endl;
                 buffer[t.len]=0;
 
                 LOG << F("ERROR: failed to find \"type\" key/value pair: ") << buffer << Logger::endl;
+                LOG << F("t.ptr :") << t.ptr << Logger::endl;
+                LOG << F("t.len :") << t.len << Logger::endl;
+
                 return false;
             }
 
@@ -1011,7 +1003,7 @@ LOG << F("Calling json_scanf_array_elem : ") << &t << Logger::endl;
                 return false;
             }
         }
-        LOG << Logger::endl;
+        LOG << F("Completed Scan for Devices: \n");
         return true;
     }
 

@@ -829,7 +829,8 @@ int json_walk(const char *json_string, int json_string_length,
   frozen.callback = callback;
 
   TRY(doit(&frozen));
-
+  LOG << "json_walk json_string =" << json_string << "\n";
+  LOG << "json_walk json_string_length =" << json_string_length << "\n";
   return frozen.cur - json_string;
 }
 
@@ -863,6 +864,9 @@ int json_scanf_array_elem(const char *s, int len, const char *path, int idx,
   memset(token, 0, sizeof(*token));
   snprintf(info.path, sizeof(info.path), "%s[%d]", path, idx);
   json_walk(s, len, json_scanf_array_elem_cb, &info);
+  LOG << "json_scanf_array_elem path =" << path << "\n";
+  LOG << "json_scanf_array_elem length of path =" << idx << "\n";
+
   return info.found ? token->len : -1;
 }
 
@@ -1047,7 +1051,7 @@ int json_vscanf(const char *s, int len, const char *fmt, va_list ap) {
   char *p = NULL;
   struct json_scanf_info info = {0, path, fmtbuf, NULL, NULL, 0};
 
-  LOG << "json_vscanf s=" << s << " len=" << len << "\nfmt=" << fmt << Logger::endl;
+//  LOG << "json_vscanf s=" << s << " len=" << len << "\nfmt=" << fmt << Logger::endl;
 
   while (fmt[i] != '\0') {
     //LOG << "i=" << i << " fmt[i]=" << fmt[i] << Logger::endl;
@@ -1119,11 +1123,8 @@ int json_scanf(const char *str, int len, const char *fmt, ...) {
   va_start(ap, fmt);
   result = json_vscanf(str, len, fmt, ap);
   va_end(ap);
-  LOG << "json_vscanf str=" << str << "\n";
-    LOG << "json_vscanf len=" << len << "\n";
-      LOG << "json_vscanf fmt=" << fmt << "\n";
-//        LOG << "json_vscanf ap=" << ap << "\n";
-          LOG << "json_vscanf result=" << result << "\n";
+  LOG << "json_scanf str=" << str << "\n";
+  LOG << "json_scanf result=" << result << "\n";
   return result;
 }
 

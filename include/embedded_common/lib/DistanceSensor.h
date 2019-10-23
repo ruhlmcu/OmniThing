@@ -3,23 +3,36 @@
 #ifndef OMNI_DISTANCESENSOR_H
 #define OMNI_DISTANCESENSOR_H
 
+#include "CompositePeripheral.h"
+#include "ObjectConfig.h"
+#include "DigitalInputPin.h"
+#include "DigitalOutputPin.h"
+
 #include "Device.h"
 
 
- * Values of divisors
+// Values of divisors
 
 #define CM 28
 #define INC 71
 
 namespace omni
+{
+// Do i need a class statement here for Input or Output classes?
+// class InputUInt; // possible inputs are InputFloat, InputBool, InputUInt
+// class OutputFloat; // possible outputs are OutputBool, OutputFloat, OutputString, OutputVoid
 
   class DistanceSensor :  public Device
   {
 
   private:
+    unsigned short tPin; //(pin)
+    unsigned short ePin; //(pin)
+    bool internal_pullup;
 
-    uint8_t trig;
-    uint8_t echo;
+    DigitalInputPin* echoPin; //(inputPin) echo is the input pin which is read. data types must coorespond
+    DigitalOutputPin* trigPin; //(outputPin) trigger is the output pin which is manipulated. data types must coorespond
+
     unsigned long previousMicros;
     unsigned long timeout;
     unsigned int timing();
@@ -27,26 +40,21 @@ namespace omni
     void sendJsonPacket();
 
   protected:
-    void writePin(bool b);
-//  virtual void writePin(bool b) = 0;
-
   public:
-    DistanceSensor(InputUInt& trigPin, InputUInt& echoPin, unsigned long timeOut = 20000UL, bool constantPoll = true);
+    DistanceSensor(unsigned short trigPin, unsigned short echoPin, unsigned long timeOut = 20000UL, bool constantPoll = true);
     virtual ~DistanceSensor();
 
     virtual void recvJson(const char* cmd, const char* json);
-    virtual void run();
-    virtual void init();
 
     virtual const char* getType() const {return Type;}
-    unsigned int read(unsigned int und = CM);
-    unsigned int timing();
+
+    virtual unsigned int read(unsigned int und = CM); // adding virtual mimics MotionSensor not found in Ultrasonic
 
     static Device* createFromJson(const char* json);
 
     void setTimeout(unsigned long timeOut) {timeout = timeOut;}
+    void setMaxDistance(unsigned long dist) {timeout = dist*CM*2;}
 
-    virtual bool configure();
 
     //Type
     static const char* Type;
@@ -54,12 +62,10 @@ namespace omni
     //json commands
     static const char* Cmd_Poll;
 
+    //params
+    static const char* Param_Distance;
+
     //events
-
-    static const char* Event_Changed;
-
-    static ObjectConfig<InputUInt> InputUIntConf;
-    static ObjectConfig<OutputBool> OutputBoolConf;
 
     static ObjectConfig<Device> DevConf;
 
