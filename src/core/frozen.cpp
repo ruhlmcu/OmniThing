@@ -865,7 +865,9 @@ int json_scanf_array_elem(const char *s, int len, const char *path, int idx,
   snprintf(info.path, sizeof(info.path), "%s[%d]", path, idx);
   json_walk(s, len, json_scanf_array_elem_cb, &info);
   LOG << "json_scanf_array_elem path =" << path << "\n";
-  LOG << "json_scanf_array_elem length of path =" << idx << "\n";
+  LOG << "json_scanf_array_elem idx =" << idx << "\n";
+  LOG << "json_scanf_array_elem s =" << s << "\n";
+  LOG << "json_scanf_array_elem len =" << len << "\n";
 
   return info.found ? token->len : -1;
 }

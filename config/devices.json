@@ -267,11 +267,11 @@
         ]
     },
     {
-        "type": "DistanceSensor",
+        "type": "distanceSensor",
         "parameters": [
           {
               "name": "output",
-              "type": "TimedOutputBool",
+              "type": "OutputBool",
               "required": true,
               "description": "What the device sets to true/false (i.e. digital output pin)"
           },
@@ -281,12 +281,6 @@
               "required": true,
               "invert": false,
               "description": "What the device sets to the roundtrip time in milliseconds from trigger to echo recieved (i.e. digital input pin)"
-          },
-          {
-              "name": "unit",
-              "type": "string",
-              "required": true,
-              "description": "CM for centimeters and IN for inches"
           },
           {
               "name": "invert",
@@ -299,10 +293,16 @@
               "type": "bool",
               "required": true,
               "description": "Initial value to set the switch to at startup"
+          },
+          {
+              "name": "constantPoll",
+              "type": "bool",
+              "required": true,
+              "description": "Whether to constantly poll the input source (usually should be true)"
           }
 
         ],
-        "events": [
+        "events": ["changed"
         ],
         "commands": [
             "poll"

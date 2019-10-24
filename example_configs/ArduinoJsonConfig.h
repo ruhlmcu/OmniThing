@@ -31,29 +31,31 @@ R"RAWSTR({"CompositePeriphs":
 const char Device_0[] PROGMEM =
 R"RAWSTR({"Devices":
 [
-{
+  {
       "name": "GarageSensor01",
-      "triggers": [
-      {
-        "interval": 10000,
-        "command": "poll"
-      }
-      ],
-      "output": {
-          "invert": true,
-          "initial": true,
-          "type": "DigitalOutputPinArduino",
-          "pin": 12
-      },
+      "subscriptions": [],
       "input": {
           "type":     "DigitalInputPinArduino",
           "pin":      13,
           "invert":   false,
           "pullup":   true
       }
+      "output": {
+          "type": "DigitalOutputPinArduino",
+          "pin": 12,
+          "invert": false,
+          "initial": true
+      },
       "type": "distanceSensor",
-      "unit": "CM",
-      "constantPoll": true
+      "constantPoll": true,
+      "triggers": [
+        {
+          "interval": 10000,
+          "command": "poll",
+          "offset": 0
+        }
+      ]
+    }
 ]})RAWSTR";
 
 
@@ -67,7 +69,7 @@ const char* const Config_Json_Strings[] PROGMEM = {
 
 const unsigned int Num_Json_Strings = 4;
 
-const unsigned int Max_Json_String_Length = 920;
+const unsigned int Max_Json_String_Length = 599;
 
 }
 
