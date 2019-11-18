@@ -1,0 +1,19 @@
+For ESP support, we just need to add a new file to src/embedded_common/lib called something like hcsr04.cpp . It would derive from the class called InputFloat and would return the measured distance in its getFloat() method. Elsewhere we could handle the conversion from the float to a boolean based on it being greater than or equal to a range
+
+src/arduino/lib/AnalogInputPinArduino.cpp is an example of a simple InputFloat type.
+
+src/embedded_common/lib/DhtReader.cpp shows how you can use gpios in a platform-independent way using DigitalInputPin::create() and DigitalOutputPin::create().
+
+You will need a function to create your class from json (see AnalogInputPinArduino’s createFromJson function).
+
+Edit: Also see the readme for a more general explanation of OmniThing’s design and architecture. You will need to follow the Arduino build instructions to make local changes. There is also a section called “Contributing to OmniThing” that includes several tips.
+
+Yes, see the inputPin and outputPin initialization in DhtReader.cpp’s constructor for an example of using the digital input/output create() functions.
+
+Eventually you’ll need a function to parse a json configuration which will have the gpio pin numbers you need.
+
+Then you’ll initialize class members using those supplied pins (see DhtReader.cpp’s createFromJson function for an example).
+
+You’ll need to implement the readFloat() function for the hcsr04 class (which will be a class derived from the InputFloat class).
+
+In that readFloat() function you can do the trigger and echo pin handling to read the distance, convert it to a float, and return that as the value. See AnalogInputPin.cpp for how to implement an InputFloat

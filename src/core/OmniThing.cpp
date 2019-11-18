@@ -10,6 +10,7 @@
 #include "frozen.h"
 #include "Triggerable.h"
 #include <string.h>
+#include <arduino.h>
 
 namespace omni
 {
@@ -979,7 +980,10 @@ namespace omni
             for(unsigned int i = 0; i < m_DeviceConfigs.getCount(); ++i)
             {
                 auto conf = m_DeviceConfigs[i];
+
                 LOG << F("Made it here #2 - conf = \n") << m_DeviceConfigs[i] << Logger::endl;
+                  LOG << F("Made it here #2 - buffer = \n") << buffer << Logger::endl;
+                  LOG << F("Made it here #2 - m_DeviceConfigs.getCount()) = \n") << m_DeviceConfigs.getCount() << Logger::endl;
                 if(!strcmp(buffer, conf->getType()))
                 {
                   LOG << F("Made it here #3\n");
