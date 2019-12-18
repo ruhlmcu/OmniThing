@@ -24,47 +24,62 @@ R"RAWSTR({"NetworkSender":
     "ssid": "ruhlman"
 }})RAWSTR";
 
-const char CompositePeriphs[] PROGMEM =
-R"RAWSTR({"CompositePeriphs":
-[]})RAWSTR";
-
 const char Device_0[] PROGMEM =
 R"RAWSTR({"Devices":
 [
   {
-      "name": "GarageSensor01",
-      "subscriptions": [],
-      "input": {
-          "type":     "DigitalInputPinArduino",
-          "pin":      13,
-          "invert":   false,
-          "pullup":   true
-      }
-      "output": {
-          "type": "DigitalOutputPinArduino",
-          "pin": 12,
-          "invert": false,
-          "initial": true
-      },
-      "type": "distanceSensor",
-      "constantPoll": true,
-      "triggers": [
+    "name": "GarageSensor",
+    "subscriptions": [],
+    "triggers": [
         {
-          "interval": 10000,
-          "command": "poll",
-          "offset": 0
+            "interval": 30000,
+            "command": "poll",
+            "offset": 0
         }
-      ]
-    }
+    ],
+    "input": {
+      "pullup": true,
+      "invert": true,
+      "type": "DigitalInputPin",
+      "echoPin": 13
+    },
+    "output": {
+        "initial": true,
+        "invert": false,
+        "type": "DigitalOutputPin",
+        "trigPin": 12
+    },
+    "type": "DistanceSensor",
+    "timeOut": 20000,
+    "constantPoll": true
+  }
 ]})RAWSTR";
-
-
-
+const char Device_1[] PROGMEM =
+R"RAWSTR({"Devices":
+[
+  {
+    "name": "GarageSensor2",
+    "subscriptions": [],
+    "triggers": [
+    {
+        "interval": 30000,
+        "command": "poll",
+        "offset": 0
+    }
+    ],
+    "echoPin": 13,
+    "trigPin": 12
+    "type": "DistanceSensor",
+    "timeOut": 20000,
+    "constantPoll": true,
+    "pullup": false
+  }
+]})RAWSTR";
 const char* const Config_Json_Strings[] PROGMEM = {
         NetworkReceiver,
         NetworkSender,
-        CompositePeriphs,
-        Device_0
+        Device_0,
+        Device_1
 };
 
 const unsigned int Num_Json_Strings = 4;

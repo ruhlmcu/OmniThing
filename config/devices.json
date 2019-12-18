@@ -267,7 +267,7 @@
         ]
     },
     {
-        "type": "distanceSensor",
+        "type": "DistanceSensor",
         "parameters": [
           {
               "name": "output",
