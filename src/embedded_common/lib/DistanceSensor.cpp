@@ -2,7 +2,8 @@
 #include "OmniThing.h"
 #include "Logger.h"
 #include "OmniUtil.h"
-
+#include "DigitalOutputPinArduino.h"
+#include "DigitalInputPinArduino.h"
 #include "frozen.h"
 #include <Arduino.h>
 #include <string.h>
@@ -17,42 +18,63 @@ void DistanceSensor::sendJsonPacket()
 {
     //What is the purpose of sendJsonPacket
     LOG << F("DistanceSensor.cpp - DistanceSensor::sendJsonPacket\n");
+
     char buffer[256] = "";
+
     struct json_out out = JSON_OUT_BUF(buffer, sizeof(buffer));
 
-    json_printf(&out, "{name: \"%s\", type: \"%s\", distance: \"%f\", status: \"%s\"}",
-                getName(), getType(), read(), m_bValue ? "open" : "closed");
+    LOG << F("DistanceSensor.cpp - buffer ") << buffer << Logger::endl;
 
-    LOG << buffer << Logger::endl;
-    LOG << F("DistanceSensor.cpp - sendJsonPacket ") << getType() << F(" ") << getName()<< F(" ") << read()  << Logger::endl;
+    json_printf(&out, "{name: \"%s\", type: \"%s\", distance: \"%f\", status: \"%s\"}",
+                getName(), getType(), read(), m_bLastVal ? "open" : "closed");
+
     OmniThing::getInstance().sendJson(buffer);
 }
 
-float DistanceSensor::checkSensor()
+unsigned int DistanceSensor::checkSensor()
   {
     LOG << F("DistanceSensor.cpp - DistanceSensor::checkSensor\n");
-/*
-    digitalWrite(tPin, LOW);
-    delayMicroseconds(2);
-    digitalWrite(tPin, HIGH);
-    delayMicroseconds(10);
-    digitalWrite(tPin, LOW);
 
-    previousMicros = micros();
-    while(!digitalRead(ePin) && (micros() - previousMicros) <= timeout); // wait for the echo pin HIGH or timeout
-    previousMicros = micros();
-    while(digitalRead(ePin)  && (micros() - previousMicros) <= timeout); // wait for the echo pin LOW or timeout
+    outputPin->configure();
+    outputPin->writeBool(LOW);
+    sleepMicrosBusy(2);
+    outputPin->writeBool(HIGH);
+    sleepMicrosBusy(10);
+    outputPin->writeBool(LOW);
 
-    return micros() - previousMicros; // duration
-*/
+    inputPin->configure();
+
+    previousMicros = getMicros();
+      LOG << F("DistanceSensor.cpp - DistanceSensor::checkSensor - starting readBool(): ") << inputPin->readBool() << Logger::endl;
+      LOG << F("DistanceSensor.cpp - DistanceSensor::checkSensor - !inputPin->readBool() previousMicros: ") << previousMicros << Logger::endl;
+    while(!inputPin->readBool() && (getMicros() - previousMicros) <= timeout)
+    {
+      LOG << F("DistanceSensor.cpp - DistanceSensor::checkSensor - #1 readBool(): ") << inputPin->readBool() << Logger::endl;
+      LOG << F("DistanceSensor.cpp - DistanceSensor::checkSensor - #2 (getMicros() - previousMicros): ") << (getMicros - previousMicros) << Logger::endl;
+      LOG << F("DistanceSensor.cpp - DistanceSensor::checkSensor - #3 timeout: ") << timeout << Logger::endl;
+    } // wait for the echo pin HIGH or timeout
+    previousMicros = getMicros();
+    LOG << F("DistanceSensor.cpp - DistanceSensor::checkSensor - inputPin->readBool() previousMicros: ") << previousMicros << Logger::endl;
+
+    while(inputPin->readBool() && (getMicros()  - previousMicros) <= timeout) // wait for the echo pin LOW or timeout
+    {
+      LOG << F("DistanceSensor.cpp - DistanceSensor::checkSensor - #4 readBool(): ") << inputPin->readBool() << Logger::endl;
+      LOG << F("DistanceSensor.cpp - DistanceSensor::checkSensor - #5 (getMicros - previousMicros): ") << (getMicros() - previousMicros) << Logger::endl;
+      LOG << F("DistanceSensor.cpp - DistanceSensor::checkSensor - #6 timeout: ") << timeout << Logger::endl;
+    } // wait for the echo pin HIGH or timeout
+
+    return getMicros() - previousMicros; // duration
+
   }
 //public
 
-DistanceSensor::DistanceSensor(const char* name, unsigned short echoPin, unsigned short trigPin, unsigned long timeOut, bool constantPoll, bool pullup):
-      Device(constantPoll),
-      echoPin(ePin), // ePin is equivelant of pin - echoPin is equivelant of pinNum
-      trigPin(tPin), // tPin is equivelant of pin - trigPin is equivelant of pinNum
+DistanceSensor::DistanceSensor(const char* name, unsigned short echoPin, unsigned short trigPin, unsigned long timeOut, bool pullup):
+      Device(false),
+      poll_timer(getMillis() - MIN_DS_POLL_MS),
+      ePin(echoPin), // input
+      tPin(trigPin), // output
       timeout(timeOut),
+      internal_pullup(pullup),
       inputPin(DigitalInputPin::create(ePin, false, internal_pullup)),
       outputPin(DigitalOutputPin::create(tPin, true, false))
     {
@@ -66,55 +88,61 @@ DistanceSensor::~DistanceSensor()
 
 void DistanceSensor::recvJson(const char* cmd, const char* json)
     {
-    LOG << F("DistanceSensor.cpp - DistanceSensor::recvJson\n");
-        if(!strcmp(cmd, Cmd_Poll))
-        {
-            LOG << F("DistanceSensor.cpp - Poll triggered for ") << getType() << F(" ") << getName() << Logger::endl;
-            read();
-            sendJsonPacket();
-        }
-    }
-
-void DistanceSensor::init()
-  {
-      LOG << F("DistanceSensor.cpp - DistanceSensor::init\n");
-      sendJsonPacket();
+      if(!strcmp(cmd, Cmd_Poll))
+      {
+          LOG << F("Poll triggered for ") << getType() << F(" ") << getName() << Logger::endl;
+          float tmp = read();
+          if(tmp > 40)
+              emit(Event_Closed);
+          else
+          {
+              emit(Event_Open);
+          }
+          m_bLastVal = tmp;
+          sendJsonPacket();
+      }
   }
 
 void DistanceSensor::run()
-  {
-    LOG << F("DistanceSensor.cpp - DistanceSensor::run\n");
-    float tmp = checkSensor();
-    sendJsonPacket();
+{
+    float tmp = read();
+    if(tmp > 40)
+        emit(Event_Closed);
+    else
+    {
+        emit(Event_Open);
     }
+    sendJsonPacket();
+    m_bLastVal = tmp;
+}
+
+void DistanceSensor::init()
+{
+    m_bLastVal = read();
+    sendJsonPacket();
+}
 Device* DistanceSensor::createFromJson(const char* json)
     {
         LOG << F("DistanceSensor.cpp - DistanceSensor::createFromJson\n");
-        const char* name = parseName(json);
-        if(!name)
-            LOG << F("ERROR DistanceSensor.cpp - createFromJson - name not defined\n");
-            return nullptr;
 
         //general variables
         unsigned long timeout;
-        bool constantpoll;
-        unsigned short ePin;
-        unsigned short tPin;
-        bool invert;
+        unsigned short echoPin;
+        unsigned short trigPin;
+        bool pullup = false;
         unsigned int len = strlen(json);
         json_token t;
+        char* name;
 
-        //variables for DigitalInputPinArduino - The Echo (input) pin is where the duration of the signal is recieved from the sensor
-//        unsigned short echoPin;
-        bool pullup = false;
-
-        //variables for DigitalOutputPinArduino - The Trigger (output) pin is where the signal is sent from the sensor
-//        unsigned short trigPin;
-        bool initial = true;
-
-        if(json_scanf(json, len, "{trigPin: %hu}", &outputPin) != 1)
+        if(json_scanf(json, len, "{name: %Q}", &name) != 1)
         {
-            LOG << F("ERROR DistanceSensor.cpp - createFromJson - trigPin not defined")  << json_scanf(json, len, "{trigPin: %hu}", &outputPin)  << Logger::endl;
+            LOG << F("ERROR DistanceSensor.cpp - createFromJson - name not defined")  << json_scanf(json, len, "{name: %hu}", &name)  << Logger::endl;
+            return nullptr;
+        }
+
+        if(json_scanf(json, len, "{trigPin: %hu}", &trigPin) != 1)
+        {
+            LOG << F("ERROR DistanceSensor.cpp - createFromJson - trigPin not defined")  << json_scanf(json, len, "{trigPin: %hu}", &trigPin)  << Logger::endl;
             return nullptr;
         }
         if(json_scanf(json, len, "{timeOut: %lu}", &timeout) != 1)
@@ -122,26 +150,20 @@ Device* DistanceSensor::createFromJson(const char* json)
             LOG << F("ERROR DistanceSensor.cpp - createFromJson - timeOut not defined")  << json_scanf(json, len, "{timeOut: %lu}", &timeout) << Logger::endl;
             return nullptr;
         }
-        if(json_scanf(json, len, "{constantPoll %B}", &constantpoll) != 1)
+        if(json_scanf(json, len, "{echoPin: %hu}", &echoPin) != 1)
         {
-            LOG << F("ERROR DistanceSensor.cpp - createFromJson - constantPoll not defined")  << json_scanf(json, len, "{constantPoll %B}", &constantpoll) << Logger::endl;
-            return nullptr;
-        }
-        if(json_scanf(json, len, "{echoPin: %hu}", &inputPin) != 1)
-        {
-            LOG << F("ERROR DistanceSensor.cpp - ")  << json_scanf(json, len, "{echoPin: %hu}", &inputPin) << Logger::endl;
+            LOG << F("ERROR DistanceSensor.cpp - createFromJson - echoPin not defined ")  << json_scanf(json, len, "{echoPin: %hu}", &echoPin) << Logger::endl;
             return nullptr;
         }
 
-        return new DistanceSensor(*outputPin, inputPin, timeout, constantpoll);
+        auto d =  new DistanceSensor(name, trigPin, echoPin, timeout, pullup);
+        d->parseMisc(json);
+        return d;
 }
-    /*
-     * If the unit of measure is not passed as a parameter,
-     * by default, it will return the distance in centimeters.
-     * To change the default, replace CM by INC.
-     */
-float DistanceSensor::read(float und) {
-      LOG << F("DistanceSensor.cpp - DistanceSensor::read\n");
+
+float DistanceSensor::read(uint8_t und) {
+      LOG << F("DistanceSensor.cpp - DistanceSensor::read checkSensor(): ")  << checkSensor() << Logger::endl;
+      LOG << F("DistanceSensor.cpp - DistanceSensor::read und: ")  << und << Logger::endl;
       return checkSensor() / und / 2;  //distance by divisor
     }
 
@@ -155,5 +177,5 @@ float DistanceSensor::read(float und) {
     const char* DistanceSensor::Event_Closed   = "closed";
     const char* DistanceSensor::Event_Changed  = "changed";
 
-ObjectConfig<Device> DistanceSensor::DevConf(Type, createFromJson);
+    ObjectConfig<Device> DistanceSensor::DevConf(Type, createFromJson);
 }

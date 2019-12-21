@@ -5,9 +5,10 @@
 #include "ObjectConfig.h"
 #include "DigitalInputPin.h"
 #include "DigitalOutputPin.h"
+
 #define CM 28
 #define INC 71
-
+#define MIN_DS_POLL_MS  2000
 namespace omni
 {
   //class OutputBool;
@@ -17,24 +18,28 @@ namespace omni
   {
 
   private:
-    unsigned long previousMicros;
+    unsigned long long previousMicros;
     unsigned long timeout;
-    bool constantpoll;
-    bool m_bValue;
+
+
+    unsigned long long poll_timer;
+
+    float m_bLastVal;
+
     unsigned short ePin;
     unsigned short tPin;
     bool internal_pullup;
     DigitalInputPin* inputPin;
     DigitalOutputPin* outputPin;
 
-    float checkSensor();
+    unsigned int checkSensor();
     void sendJsonPacket(); //standard across all devices
 
   protected:
     static const char* parseName(const char* json);
 
   public:
-    DistanceSensor(const char* name, unsigned short echoPin, unsigned short trigPin, unsigned long timeOut, bool constantPoll, bool pullup);
+    DistanceSensor(const char* name, unsigned short echoPin, unsigned short trigPin, unsigned long timeOut, bool pullup);
     virtual ~DistanceSensor();
 
     virtual void recvJson(const char* cmd, const char* json); //standard across all devices
@@ -43,7 +48,7 @@ namespace omni
 
     virtual const char* getType() const {return Type;} //standard across all devices
 
-    virtual float read(float und = CM);
+    virtual float read(uint8_t und = INC);
     virtual void setTimeout(unsigned long timeOut) {timeout = timeOut;}
     virtual void setMaxDistance(unsigned long dist) {timeout = dist*INC*2;}
 
