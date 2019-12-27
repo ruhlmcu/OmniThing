@@ -61,6 +61,7 @@ namespace omni
     static const char* Cmd_Poll;
 
     //events
+
     static const char* Event_Open;
     static const char* Event_Closed;
     static const char* Event_Changed;

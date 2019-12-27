@@ -17,17 +17,19 @@ namespace omni
 void DistanceSensor::sendJsonPacket()
 {
     //What is the purpose of sendJsonPacket
-    LOG << F("DistanceSensor.cpp - DistanceSensor::sendJsonPacket\n");
+
+
 
     char buffer[256] = "";
 
     struct json_out out = JSON_OUT_BUF(buffer, sizeof(buffer));
 
-    LOG << F("DistanceSensor.cpp - buffer ") << buffer << Logger::endl;
+    LOG << F("DistanceSensor.cpp - DistanceSensor::sendJsonPacket - buffer: ") << buffer << Logger::endl;
 
-    json_printf(&out, "{name: \"%s\", type: \"%s\", distance: \"%f\", status: \"%s\"}",
-                getName(), getType(), read(), m_bLastVal ? "open" : "closed");
+    //LOG << F("DistanceSensor.cpp ") <<  F("\n getName() = ") << getName() <<  F("\n getType() = ") <<  getType()<<  F("\n read() = ") <<  read()<<  F("\n doorStatus = ") <<  doorStatus << Logger::endl;
 
+    //json_printf(&out, "{distance: \"%f\"}", read());
+    json_printf(&out, "{name: \"%s\", type: \"%s\", distance: \"%f\"}", getName(), getType(), read());
     OmniThing::getInstance().sendJson(buffer);
 }
 
@@ -45,22 +47,22 @@ unsigned int DistanceSensor::checkSensor()
     inputPin->configure();
 
     previousMicros = getMicros();
-      LOG << F("DistanceSensor.cpp - DistanceSensor::checkSensor - starting readBool(): ") << inputPin->readBool() << Logger::endl;
-      LOG << F("DistanceSensor.cpp - DistanceSensor::checkSensor - !inputPin->readBool() previousMicros: ") << previousMicros << Logger::endl;
+     //LOG << F("DistanceSensor.cpp - DistanceSensor::checkSensor - starting readBool(): ") << inputPin->readBool() << Logger::endl;
+     //LOG << F("DistanceSensor.cpp - DistanceSensor::checkSensor - !inputPin->readBool() previousMicros: ") << previousMicros << Logger::endl;
     while(!inputPin->readBool() && (getMicros() - previousMicros) <= timeout)
     {
-      LOG << F("DistanceSensor.cpp - DistanceSensor::checkSensor - #1 readBool(): ") << inputPin->readBool() << Logger::endl;
-      LOG << F("DistanceSensor.cpp - DistanceSensor::checkSensor - #2 (getMicros() - previousMicros): ") << (getMicros - previousMicros) << Logger::endl;
-      LOG << F("DistanceSensor.cpp - DistanceSensor::checkSensor - #3 timeout: ") << timeout << Logger::endl;
+     //LOG << F("DistanceSensor.cpp - DistanceSensor::checkSensor - #1 readBool(): ") << inputPin->readBool() << Logger::endl;
+     //LOG << F("DistanceSensor.cpp - DistanceSensor::checkSensor - #2 (getMicros() - previousMicros): ") << (getMicros - previousMicros) << Logger::endl;
+     //LOG << F("DistanceSensor.cpp - DistanceSensor::checkSensor - #3 timeout: ") << timeout << Logger::endl;
     } // wait for the echo pin HIGH or timeout
     previousMicros = getMicros();
-    LOG << F("DistanceSensor.cpp - DistanceSensor::checkSensor - inputPin->readBool() previousMicros: ") << previousMicros << Logger::endl;
+   //LOG << F("DistanceSensor.cpp - DistanceSensor::checkSensor - inputPin->readBool() previousMicros: ") << previousMicros << Logger::endl;
 
     while(inputPin->readBool() && (getMicros()  - previousMicros) <= timeout) // wait for the echo pin LOW or timeout
     {
-      LOG << F("DistanceSensor.cpp - DistanceSensor::checkSensor - #4 readBool(): ") << inputPin->readBool() << Logger::endl;
-      LOG << F("DistanceSensor.cpp - DistanceSensor::checkSensor - #5 (getMicros - previousMicros): ") << (getMicros() - previousMicros) << Logger::endl;
-      LOG << F("DistanceSensor.cpp - DistanceSensor::checkSensor - #6 timeout: ") << timeout << Logger::endl;
+     //LOG << F("DistanceSensor.cpp - DistanceSensor::checkSensor - #4 readBool(): ") << inputPin->readBool() << Logger::endl;
+     //LOG << F("DistanceSensor.cpp - DistanceSensor::checkSensor - #5 (getMicros - previousMicros): ") << (getMicros() - previousMicros) << Logger::endl;
+     //LOG << F("DistanceSensor.cpp - DistanceSensor::checkSensor - #6 timeout: ") << timeout << Logger::endl;
     } // wait for the echo pin HIGH or timeout
 
     return getMicros() - previousMicros; // duration
@@ -87,32 +89,37 @@ DistanceSensor::~DistanceSensor()
     }
 
 void DistanceSensor::recvJson(const char* cmd, const char* json)
-    {
+  {
+      LOG << F("DistanceSensor::recvJson() \n");
       if(!strcmp(cmd, Cmd_Poll))
       {
           LOG << F("Poll triggered for ") << getType() << F(" ") << getName() << Logger::endl;
           float tmp = read();
-          if(tmp > 40)
-              emit(Event_Closed);
-          else
+          if (!inRange(m_bLastVal-3, m_bLastVal+3, tmp))
           {
-              emit(Event_Open);
-          }
+              {
+                emit(Event_Changed);
+                LOG << F("DistanceSensor::recvJson() - Event Changed: \n");
+                //sendJsonPacket();
+              }
           m_bLastVal = tmp;
           sendJsonPacket();
+          }
+
       }
   }
 
 void DistanceSensor::run()
 {
-    float tmp = read();
-    if(tmp > 40)
-        emit(Event_Closed);
-    else
+  LOG << F("DistanceSensor::run() \n");
+  float tmp = read();
+ //LOG << F("DistanceSensor::run() - tmp: ") << tmp << Logger::endl;
+  if (!inRange(m_bLastVal-3, m_bLastVal+3, tmp))
     {
-        emit(Event_Open);
+        emit(Event_Changed);
+        LOG << F("DistanceSensor::run() - Event Changed: \n");
+        sendJsonPacket();
     }
-    sendJsonPacket();
     m_bLastVal = tmp;
 }
 
@@ -136,23 +143,23 @@ Device* DistanceSensor::createFromJson(const char* json)
 
         if(json_scanf(json, len, "{name: %Q}", &name) != 1)
         {
-            LOG << F("ERROR DistanceSensor.cpp - createFromJson - name not defined")  << json_scanf(json, len, "{name: %hu}", &name)  << Logger::endl;
+           //LOG << F("ERROR DistanceSensor.cpp - createFromJson - name not defined")  << json_scanf(json, len, "{name: %hu}", &name)  << Logger::endl;
             return nullptr;
         }
 
         if(json_scanf(json, len, "{trigPin: %hu}", &trigPin) != 1)
         {
-            LOG << F("ERROR DistanceSensor.cpp - createFromJson - trigPin not defined")  << json_scanf(json, len, "{trigPin: %hu}", &trigPin)  << Logger::endl;
+           //LOG << F("ERROR DistanceSensor.cpp - createFromJson - trigPin not defined")  << json_scanf(json, len, "{trigPin: %hu}", &trigPin)  << Logger::endl;
             return nullptr;
         }
         if(json_scanf(json, len, "{timeOut: %lu}", &timeout) != 1)
         {
-            LOG << F("ERROR DistanceSensor.cpp - createFromJson - timeOut not defined")  << json_scanf(json, len, "{timeOut: %lu}", &timeout) << Logger::endl;
+           //LOG << F("ERROR DistanceSensor.cpp - createFromJson - timeOut not defined")  << json_scanf(json, len, "{timeOut: %lu}", &timeout) << Logger::endl;
             return nullptr;
         }
         if(json_scanf(json, len, "{echoPin: %hu}", &echoPin) != 1)
         {
-            LOG << F("ERROR DistanceSensor.cpp - createFromJson - echoPin not defined ")  << json_scanf(json, len, "{echoPin: %hu}", &echoPin) << Logger::endl;
+           //LOG << F("ERROR DistanceSensor.cpp - createFromJson - echoPin not defined ")  << json_scanf(json, len, "{echoPin: %hu}", &echoPin) << Logger::endl;
             return nullptr;
         }
 
@@ -162,8 +169,8 @@ Device* DistanceSensor::createFromJson(const char* json)
 }
 
 float DistanceSensor::read(uint8_t und) {
-      LOG << F("DistanceSensor.cpp - DistanceSensor::read checkSensor(): ")  << checkSensor() << Logger::endl;
-      LOG << F("DistanceSensor.cpp - DistanceSensor::read und: ")  << und << Logger::endl;
+     LOG << F("DistanceSensor.cpp - DistanceSensor::read())\n");
+     //LOG << F("DistanceSensor.cpp - DistanceSensor::read und: ")  << und << Logger::endl;
       return checkSensor() / und / 2;  //distance by divisor
     }
 

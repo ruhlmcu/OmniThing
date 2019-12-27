@@ -22,65 +22,66 @@
  *
  */
 metadata {
-	definition (name: "Child Distance Sensor", , namespace: "OmniThing", author: "Daniel Ogorchock")  {
-		capability "Sensor"
+	definition (name: "child_DistanceSensor", namespace: "OmniThing", author: "Dan Ogorchock") {
+		capability "Contact Sensor"
+        capability "Sensor"
 
 		attribute "lastUpdated", "String"
-        attribute "ultrasonic", "Number"
-    }
+	}
 
 	tiles(scale: 2) {
-		multiAttributeTile(name: "ultrasonic", type: "generic", width: 6, height: 4, canChangeIcon: true) {
-			tileAttribute("device.ultrasonic", key: "PRIMARY_CONTROL") {
-				attributeState("ultrasonic", label: '${currentValue}%', unit:"%", defaultState: true,
-						backgroundColors: [
-							[value: 80, color: "#767676"],
-							[value: 50, color: "#ffa81e"],
-							[value: 20, color: "#d04e00"]
-						])
-			}
-            tileAttribute ("device.liters", key: "SECONDARY_CONTROL") {
-        		attributeState "power", label:'Water capacity: ${currentValue} liters', icon: "http://cdn.device-icons.smartthings.com/Bath/bath6-icn@2x.png"
-            }
-        }
- 		valueTile("lastUpdated", "device.lastUpdated", inactiveLabel: false, decoration: "flat", width: 6, height: 2) {
-    			state "default", label:'Last Updated ${currentValue}', backgroundColor:"#ffffff"
+
+	multiAttributeTile(name:"Door Status", type: "generic", width: 6, height: 4, canChangeIcon: true, canChangeColor: true){
+			tileAttribute ("device.contact", key: "PRIMARY_CONTROL"){
+				attributeState "open", label: "Open", action: 'contact.open', icon: 'st.doors.garage.garage-open', backgroundColor: '#28b463'
+				attributeState "closed", label: "Closed", action: 'contact.closed', icon: 'st.doors.garage.garage-closed', backgroundColor: '#ff0000'
+ 			}
+            tileAttribute("device.lastUpdated", key: "SECONDARY_CONTROL") {
+    			attributeState("default", label:'    Last updated ${currentValue}',icon: "st.Health & Wellness.health9");
+        	}
 		}
     }
+	preferences {
 
-    preferences {
-        input name: "height", type: "number", title: "Height", description: "Enter height of tank in cm", required: true
-        input name: "diameter", type: "number", title: "Diameter", description: "Enter diameter of tank", required: true
+        input name: "openThreshold", type: "number", title: "Open", description: "Enter the maximum distance in inches when door is open", required: true
     }
 }
+def parse(def update) {
 
-def parse(String description) {
-    log.debug "parse(${description}) called"
-	def parts = description.split(" ")
-    def name  = parts.length>0?parts[0].trim():null
-    def value = parts.length>1?parts[1].trim():null
-    if (name && value) {
-        double sensorValue = value as float
-        def volume = 3.14159 * (diameter/2) * (diameter/2) * height
-        double capacityLiters = volume / 1000 * 2
-        capacityLiters = capacityLiters.round(2)
-        sendEvent(name: "liters", value: capacityLiters)
-        double capacityValue = 100 - (sensorValue/height * 100 )
-        if(capacityValue != 100)
+
+  log.debug "parsing $update"
+
+  for( e in update)
+    {
+    	log.debug "e.key $e.key e.value $e.value openThreshold $openThreshold";
+
+        if(e.key == "distance")
         {
-            capacityValue = capacityValue.round(2)
-            sendEvent(name: name, value: capacityValue)
+            def tmpValue = e.value.isNumber() ?  (e.value as double) : null;
+            def tmpThreshold = openThreshold.isNumber() ?  (openThreshold as double) : null;
+
+            log.debug "tmpValue $tmpValue tmpThreshold $tmpThreshold";
+
+            if(tmpValue != null && tmpValue < tmpThreshold)
+            {
+            	log.debug "sending event: name=${e.key} value=${'open'}";
+            	sendEvent(name: "contact", value: "open", displayed: true);
+            }
+            else
+            {
+            	log.debug "sending event: name=${e.key} value=${'closed'}";
+            	sendEvent(name: "contact", value: "closed", displayed: true);
+            }
+
         }
-        // Update lastUpdated date and time
-        def nowDay = new Date().format("MMM dd", location.timeZone)
-        def nowTime = new Date().format("h:mm a", location.timeZone)
-        sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: false)
     }
-    else {
-    	log.debug "Missing either name or value.  Cannot parse!"
-    }
+
+    def nowDay = new Date().format("MMM dd", location.timeZone)
+    def nowTime = new Date().format("h:mm a", location.timeZone)
+    sendEvent(name: "lastUpdated", value: nowDay + " at " + nowTime, displayed: true)
+
+    sendEvent(name: "distance", value: tmpValue, displayed: true)
 }
 
 def installed() {
-
 }
