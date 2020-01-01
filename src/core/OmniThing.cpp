@@ -10,7 +10,6 @@
 #include "frozen.h"
 #include "Triggerable.h"
 #include <string.h>
-#include <arduino.h>
 
 namespace omni
 {
@@ -30,15 +29,12 @@ namespace omni
         LOG << F("Device Configurations:\n");
         for(unsigned int i = 0; i < m_DeviceConfigs.getCount(); ++i)
         {
-            LOG << F("\t") << m_DeviceConfigs.getCount() << F("\n");
-            LOG << F("\t") << i << F("\n");
             LOG << F("\t") << m_DeviceConfigs[i]->getType() << F("\n");
         }
 
         LOG << F("\nComposite Peripheral Configurations:\n");
         for(unsigned int i = 0; i < m_CompositePeriphConfigs.getCount(); ++i)
         {
-            LOG << F("\t") << i << F("\n");
             LOG << F("\t") << m_CompositePeriphConfigs[i]->getType() << F("\n");
         }
 
@@ -229,7 +225,6 @@ namespace omni
 
     void OmniThing::parseJson(const char* json)
     {
-        LOG << F("Parsing Json...\n");
         char name[OMNI_MAX_NAME_LENGTH + 1];
         name[0] = '\0';
         char cmd[24];
@@ -612,7 +607,7 @@ namespace omni
         int index = getConfigIndex(configs, type);
         if(index < 0)
         {
-            LOG << F("#1 ERROR: no config found of type=") << type << Logger::endl;
+            LOG << F("ERROR: no config found of type=") << type << Logger::endl;
             const_cast<char*>(t.ptr)[t.len] = tmp;
             return nullptr;
         }
@@ -641,7 +636,7 @@ namespace omni
         int index = getConfigIndex(configs, type);
         if(index < 0)
         {
-            LOG << F("#2 ERROR: no config found of type=") << type << Logger::endl;
+            LOG << F("ERROR: no config found of type=") << type << Logger::endl;
             const_cast<char*>(t.ptr)[t.len] = tmp;
             return nullptr;
         }
@@ -670,7 +665,7 @@ namespace omni
         int index = getConfigIndex(configs, type);
         if(index < 0)
         {
-            LOG << F("#3 ERROR: no config found of type=") << type << Logger::endl;
+            LOG << F("ERROR: no config found of type=") << type << Logger::endl;
             const_cast<char*>(t.ptr)[t.len] = tmp;
             return nullptr;
         }
@@ -699,7 +694,7 @@ namespace omni
         int index = getConfigIndex(configs, type);
         if(index < 0)
         {
-            LOG << F("#4 ERROR: no config found of type=") << type << Logger::endl;
+            LOG << F("ERROR: no config found of type=") << type << Logger::endl;
             const_cast<char*>(t.ptr)[t.len] = tmp;
             return nullptr;
         }
@@ -728,7 +723,7 @@ namespace omni
         int index = getConfigIndex(configs, type);
         if(index < 0)
         {
-            LOG << F("#5 ERROR: no config found of type=") << type << Logger::endl;
+            LOG << F("ERROR: no config found of type=") << type << Logger::endl;
             const_cast<char*>(t.ptr)[t.len] = tmp;
             return nullptr;
         }
@@ -757,7 +752,7 @@ namespace omni
         int index = getConfigIndex(configs, type);
         if(index < 0)
         {
-            LOG << F("#6 ERROR: no config found of type=") << type << Logger::endl;
+            LOG << F("ERROR: no config found of type=") << type << Logger::endl;
             const_cast<char*>(t.ptr)[t.len] = tmp;
             return nullptr;
         }
@@ -786,7 +781,7 @@ namespace omni
         int index = getConfigIndex(configs, type);
         if(index < 0)
         {
-            LOG << F("#7 ERROR: no config found of type=") << type << Logger::endl;
+            LOG << F("ERROR: no config found of type=") << type << Logger::endl;
             const_cast<char*>(t.ptr)[t.len] = tmp;
             return nullptr;
         }
@@ -807,14 +802,13 @@ namespace omni
     //
     bool OmniThing::loadJsonConfig(char* json)
     {
-        LOG << F("Parsing Json Config:\n");
+        LOG << F("Parsing Json Config:\n") << json << Logger::endl;
 
         struct json_token t;
         unsigned int len = strlen(json);
         char buffer[100];
         buffer[0] = 0;
-        LOG << F("len: \n") << len << Logger::endl;
-        LOG << F("buffer: \n") << buffer << Logger::endl;
+
         // scan for NetworkReceiver
         if(json_scanf(json, len, "{NetworkReceiver: %T}", &t) == 1)
         {
@@ -850,7 +844,7 @@ namespace omni
                 }
                 if(!found)
                 {
-                    LOG << F("8 ERROR: No config found for type: ") << buffer << Logger::endl;
+                    LOG << F("ERROR: No config found for type: ") << buffer << Logger::endl;
                     return false;
                 }
 
@@ -896,7 +890,7 @@ namespace omni
                 }
                 if(!found)
                 {
-                    LOG << F("#9 ERROR: No config found for type: ") << buffer << Logger::endl;
+                    LOG << F("ERROR: No config found for type: ") << buffer << Logger::endl;
                     return false;
                 }
 
@@ -910,7 +904,6 @@ namespace omni
         // scan for CompositePeripherals
         for(unsigned int i = 0; json_scanf_array_elem(json, len, ".CompositePeriphs", i, &t) > 0; ++i)
         {
-            LOG << F("CompositePeriphs - json = \t") << json << F("\n");
             if(json_scanf(t.ptr, t.len, "{type: %s}", buffer) <= 0)
             {
                 strncpy(buffer, t.ptr, t.len);
@@ -924,13 +917,6 @@ namespace omni
             for(unsigned int i = 0; i < m_CompositePeriphConfigs.getCount(); ++i)
             {
                 auto conf = m_CompositePeriphConfigs[i];
-
-                LOG << F("\t") << i << F("\n");
-                LOG << F("\t") << conf << F("\n");
-                LOG << F("\t") << m_CompositePeriphConfigs.getCount() << F("\n");
-                LOG << F("\t") << conf->getType() << F("\n");
-                LOG << F("\t") << buffer << F("\n");
-
                 if(!strcmp(buffer, conf->getType()))
                 {
                     found = true;
@@ -954,42 +940,33 @@ namespace omni
             }
             if(!found)
             {
-                LOG << F("#10 ERROR: No config found for type: ") << buffer << Logger::endl;
+                LOG << F("ERROR: No config found for type: ") << buffer << Logger::endl;
                 return false;
             }
         }
-        LOG << F("Preparing to scan devices json =") << json << Logger::endl;
-        LOG << F("Preparing to scan devices len =") << len << Logger::endl;
-//        LOG << F("Preparing to scan devices &t =") << t << Logger::endl;
+
+        // scan for Devices
         for(unsigned int i = 0; json_scanf_array_elem(json, len, ".Devices", i, &t) > 0; ++i)
         {
-            LOG << F("Beginning of Devices Scan\n");
             if(json_scanf(t.ptr, t.len, "{type: %s}", buffer) <= 0)
             {
                 strncpy(buffer, t.ptr, t.len);
                 buffer[t.len]=0;
 
                 LOG << F("ERROR: failed to find \"type\" key/value pair: ") << buffer << Logger::endl;
-                LOG << F("t.ptr :") << t.ptr << Logger::endl;
-                LOG << F("t.len :") << t.len << Logger::endl;
-
                 return false;
             }
-            LOG << F("Made it here #1 \n");
+
             bool found = false;
             for(unsigned int i = 0; i < m_DeviceConfigs.getCount(); ++i)
             {
                 auto conf = m_DeviceConfigs[i];
-
-                LOG << F("Made it here #2 - conf = \n") << m_DeviceConfigs[i] << Logger::endl;
-                  LOG << F("Made it here #2 - buffer = \n") << buffer << Logger::endl;
-                  LOG << F("Made it here #2 - m_DeviceConfigs.getCount()) = \n") << m_DeviceConfigs.getCount() << Logger::endl;
                 if(!strcmp(buffer, conf->getType()))
                 {
-                  LOG << F("Made it here #3\n");
                     found = true;
                     char tmpC = json[(t.ptr-json)+t.len];
                     json[(t.ptr-json)+t.len] = 0;
+
                     auto obj = conf->createFromJson(t.ptr);
                     if(!obj)
                     {
@@ -1002,18 +979,19 @@ namespace omni
                         LOG << F("Successfully created new ") << t.ptr << Logger::endl;
                     }
                     json[(t.ptr-json)+t.len] = tmpC;
-                    LOG << F("Made it here #4\n");
                     break;
                 }
             }
             if(!found)
             {
-                LOG << F("#11 ERROR: No config found for type: ") << buffer << Logger::endl;
+                LOG << F("ERROR: No config found for type: ") << buffer << Logger::endl;
                 return false;
             }
         }
+        LOG << Logger::endl;
         return true;
     }
+
     bool operator==(const Event& l, const Event&r)
     {
         if(!l.src || !r.src || !l.event || !r.event)

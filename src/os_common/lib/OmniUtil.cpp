@@ -1,77 +1,45 @@
 #include "OmniUtil.h"
-#include <Arduino.h>
+
+#include <chrono>
+#include <thread>
 
 namespace omni
 {
     unsigned long long getMillis()
     {
-        return millis();
+        return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     }
 
     void sleepMillis(unsigned long long ms)
     {
-        delay(ms);
+        std::this_thread::sleep_for(std::chrono::duration<unsigned long long, std::milli>(ms));
     }
 
     void sleepMillisBusy(unsigned long long ms)
     {
-        delay(ms);
+        unsigned long long start = getMillis();
+        while((getMillis() - start) < ms)
+        {
+            continue;
+        }
     }
 
     unsigned long long getMicros()
     {
-        return micros();
+        return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
     }
 
     void sleepMicros(unsigned long long us)
     {
-        delayMicroseconds(us);
+        std::this_thread::sleep_for(std::chrono::duration<unsigned long long, std::micro>(us));
     }
 
     void sleepMicrosBusy(unsigned long long us)
     {
-        delayMicroseconds(us);
-    }
-    // Returns true if x is in range [low..high], else false
-    bool inRange(unsigned lowEnd, unsigned highEnd, unsigned checkVal)
-    {
-    return (lowEnd <= checkVal && checkVal <= highEnd);
-    }
-    void flashBuiltIn()
-    {
-      pinMode(LED_BUILTIN, OUTPUT);     // Initialize the LED_BUILTIN pin as an output
-      digitalWrite(LED_BUILTIN, LOW);   // Turn the LED on by making the voltage LOW
-      delay(1000);                      // Wait for a second
-      digitalWrite(LED_BUILTIN, HIGH);  // Turn the LED off by making the voltage HIGH
-      delay(2000);                      // Wait for two seconds
-      digitalWrite(LED_BUILTIN, LOW);   // Turn the LED on by making the voltage LOW
-      delay(1000);                      // Wait for a second
-      digitalWrite(LED_BUILTIN, HIGH);  // Turn the LED off by making the voltage HIGH
-      delay(2000);
-    }
-    void flashRed()
-    {
-
-      pinMode(LED_RED, OUTPUT);     // Initialize the LED_BUILTIN pin as an output
-      digitalWrite(LED_RED, LOW);   // Turn the LED on by making the voltage LOW
-      delay(1000);                      // Wait for a second
-      digitalWrite(LED_RED, HIGH);  // Turn the LED off by making the voltage HIGH
-      delay(2000);                      // Wait for two seconds
-      digitalWrite(LED_RED, LOW);   // Turn the LED on by making the voltage LOW
-      delay(1000);                      // Wait for a second
-      digitalWrite(LED_RED, HIGH);  // Turn the LED off by making the voltage HIGH
-      delay(2000);
-    }
-    void flashGreen()
-    {
-      pinMode(LED_GREEN, OUTPUT);     // Initialize the LED_BUILTIN pin as an output
-      digitalWrite(LED_GREEN, LOW);   // Turn the LED on by making the voltage LOW
-      delay(1000);                      // Wait for a second
-      digitalWrite(LED_GREEN, HIGH);  // Turn the LED off by making the voltage HIGH
-      delay(2000);                      // Wait for two seconds
-      digitalWrite(LED_GREEN, LOW);   // Turn the LED on by making the voltage LOW
-      delay(1000);                      // Wait for a second
-      digitalWrite(LED_GREEN, HIGH);  // Turn the LED off by making the voltage HIGH
-      delay(2000);
+        unsigned long long start = getMicros();
+        while((getMicros() - start) < us)
+        {
+            continue;
+        }
     }
 }

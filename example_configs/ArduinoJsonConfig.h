@@ -28,36 +28,6 @@ const char Device_0[] PROGMEM =
 R"RAWSTR({"Devices":
 [
   {
-    "name": "GarageSensor",
-    "subscriptions": [],
-    "triggers": [
-        {
-            "interval": 30000,
-            "command": "poll",
-            "offset": 0
-        }
-    ],
-    "input": {
-      "pullup": true,
-      "invert": true,
-      "type": "DigitalInputPin",
-      "echoPin": 13
-    },
-    "output": {
-        "initial": true,
-        "invert": false,
-        "type": "DigitalOutputPin",
-        "trigPin": 12
-    },
-    "type": "DistanceSensor",
-    "timeOut": 20000,
-    "constantPoll": true
-  }
-]})RAWSTR";
-const char Device_1[] PROGMEM =
-R"RAWSTR({"Devices":
-[
-  {
     "name": "GarageSensor2",
     "subscriptions": [],
     "triggers": [
@@ -67,22 +37,20 @@ R"RAWSTR({"Devices":
         "offset": 0
     }
     ],
-    "echoPin": 13,
-    "trigPin": 12
+    "echoPin": 05,
+    "trigPin": 04,
     "type": "DistanceSensor",
     "timeOut": 20000,
-    "constantPoll": true,
     "pullup": false
   }
 ]})RAWSTR";
 const char* const Config_Json_Strings[] PROGMEM = {
         NetworkReceiver,
         NetworkSender,
-        Device_0,
-        Device_1
+        Device_0
 };
 
-const unsigned int Num_Json_Strings = 4;
+const unsigned int Num_Json_Strings = 3;
 
 const unsigned int Max_Json_String_Length = 599;
 

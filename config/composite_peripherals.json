@@ -4,7 +4,7 @@
         "parameters": [
             {
                 "name": "pin",
-                "type": "InputBool",
+                "type": "uint",
                 "required": true,
                 "description": "Which pin the dht is connected to"
             },

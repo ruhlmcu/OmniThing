@@ -21,7 +21,7 @@ auto& omnithing = omni::OmniThing::getInstance();
 
 long freeRam()
 {
-#if defined(ARDUINO_ARCH_AVR)
+#if defined(ARDUINO_ARCH_AVR) 
     extern int __heap_start, *__brkval;
     int v;
     return (int)&v - (__brkval == 0 ? (int)&__heap_start : (int)__brkval);
@@ -48,13 +48,13 @@ void configWithProgmem(const char* json)
 
     static char buffer[Conversion_Buffer_Size];
     printFreeRam();
+
     strcpy_P(buffer, json);
-    LOG << F("configWithProgmem - buffer \n");
     omnithing.loadJsonConfig(buffer);
 }
 
 // the setup function runs once when you press reset or power the board
-void setup()
+void setup() 
 {
     using namespace omni;
     static LoggerSerial logger(Serial, 115200);
@@ -78,20 +78,19 @@ void setup()
         }
         else
         {
-            LOG << F("calling configWithProgmem...\n");
-            LOG << strlen_P(Config_Json_Strings[i]) << F(" >= ") << Conversion_Buffer_Size << Logger::endl;
             configWithProgmem(Config_Json_Strings[i]);
         }
     }
 
-    omnithing.init();
+    omnithing.init();    
 
     LOG << F("Entering main loop...\n");
 }
 
 // the loop function runs over and over again forever
-void loop()
+void loop() 
 {
     using namespace omni;
     omnithing.run();
 }
+

@@ -41,7 +41,7 @@
                 "type": "OutputVoid",
                 "required": true,
                 "description": "What the device actuates (i.e. a gpio toggler)"
-            }
+            }        
         ],
         "events": [
             "pushed"
@@ -261,51 +261,6 @@
             "on",
             "off",
             "toggle"
-        ],
-        "supported_platforms": [
-            "all"
-        ]
-    },
-    {
-        "type": "DistanceSensor",
-        "parameters": [
-          {
-              "name": "output",
-              "type": "OutputBool",
-              "required": true,
-              "description": "What the device sets to true/false (i.e. digital output pin)"
-          },
-          {
-              "name": "input",
-              "type": "InputBool",
-              "required": true,
-              "invert": false,
-              "description": "What the device sets to the roundtrip time in milliseconds from trigger to echo recieved (i.e. digital input pin)"
-          },
-          {
-              "name": "invert",
-              "type": "bool",
-              "required": true,
-              "description": "Whether or not to invert output"
-          },
-          {
-              "name": "initial",
-              "type": "bool",
-              "required": true,
-              "description": "Initial value to set the switch to at startup"
-          },
-          {
-              "name": "constantPoll",
-              "type": "bool",
-              "required": true,
-              "description": "Whether to constantly poll the input source (usually should be true)"
-          }
-
-        ],
-        "events": ["changed"
-        ],
-        "commands": [
-            "poll"
         ],
         "supported_platforms": [
             "all"

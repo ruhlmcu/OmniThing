@@ -68,12 +68,12 @@ namespace omni
 
     void TimedOutputBool::writeBool(bool b)
     {
-        startTimedOutput();
+        startTimedOutput();    
     }
 
     void TimedOutputBool::writeVoid()
     {
-        startTimedOutput();
+        startTimedOutput(); 
     }
 
     void TimedOutputBool::trigger(void* arg)
@@ -86,14 +86,18 @@ namespace omni
     {
         return createFromJson(json);
     }
-
+    
     OutputVoid* TimedOutputBool::createVoidFromJson(const char* json)
     {
         return createFromJson(json);
     }
-
-
+    
+    
     const char* TimedOutputBool::Type = "TimedOutputBool";
     ObjectConfig<OutputBool> TimedOutputBool::OutputBoolConf(Type, createBoolFromJson);
     ObjectConfig<OutputVoid> TimedOutputBool::OutputVoidConf(Type, createVoidFromJson);
 }
+
+
+
+

@@ -16,7 +16,6 @@ namespace omni
     // Overloads of registerConfig
     void registerConfig(ObjectConfig<Device>* conf)
     {
-      LOG << F("Made it to registerConfig(ObjectConfig<Devices>* conf)\n");
         OmniThing::getInstance().addDeviceConfig(conf);
     }
 

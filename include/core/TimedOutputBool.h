@@ -20,11 +20,9 @@ namespace omni
             void startTimedOutput();
 
         protected:
-
         public:
             TimedOutputBool(OutputBool& output, unsigned long duration);
-
-            virtual ~TimedOutputBool();
+            ~TimedOutputBool();
 
             virtual void writeBool(bool b);
             virtual void writeVoid();
@@ -32,7 +30,7 @@ namespace omni
             virtual void trigger(void* arg);
 
             static OutputBool* createBoolFromJson(const char* json);
-            static OutputVoid* createVoidFromJson(const char* json);
+            static OutputVoid* createVoidFromJson(const char* json); 
 
             static const char* Type;
             static ObjectConfig<OutputBool> OutputBoolConf;
